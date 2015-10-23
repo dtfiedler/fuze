@@ -15,6 +15,10 @@
 		C4C845671BDABB1E00C404A5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C4C845651BDABB1E00C404A5 /* LaunchScreen.storyboard */; };
 		C4C845721BDABB1E00C404A5 /* SoundFuzeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C845711BDABB1E00C404A5 /* SoundFuzeTests.swift */; };
 		C4C8457D1BDABB1E00C404A5 /* SoundFuzeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C8457C1BDABB1E00C404A5 /* SoundFuzeUITests.swift */; };
+		C4C8458B1BDABD0A00C404A5 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4C8458A1BDABD0A00C404A5 /* AVFoundation.framework */; };
+		C4C845DC1BDAC04D00C404A5 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4C845DB1BDAC04D00C404A5 /* SystemConfiguration.framework */; };
+		C4C845DE1BDAC45900C404A5 /* Spotify.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4C845DD1BDAC45900C404A5 /* Spotify.framework */; };
+		C4C845E71BDAC5A700C404A5 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C845E61BDAC5A700C404A5 /* LoginViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +53,11 @@
 		C4C845781BDABB1E00C404A5 /* SoundFuzeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SoundFuzeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C4C8457C1BDABB1E00C404A5 /* SoundFuzeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoundFuzeUITests.swift; sourceTree = "<group>"; };
 		C4C8457E1BDABB1E00C404A5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C4C8458A1BDABD0A00C404A5 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		C4C845DB1BDAC04D00C404A5 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		C4C845DD1BDAC45900C404A5 /* Spotify.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Spotify.framework; sourceTree = "<group>"; };
+		C4C845E51BDAC50700C404A5 /* Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Header.h; sourceTree = "<group>"; };
+		C4C845E61BDAC5A700C404A5 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +65,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C4C845DC1BDAC04D00C404A5 /* SystemConfiguration.framework in Frameworks */,
+				C4C845DE1BDAC45900C404A5 /* Spotify.framework in Frameworks */,
+				C4C8458B1BDABD0A00C404A5 /* AVFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -79,10 +91,14 @@
 		C4C8454E1BDABB1E00C404A5 = {
 			isa = PBXGroup;
 			children = (
+				C4C845E51BDAC50700C404A5 /* Header.h */,
+				C4C845DD1BDAC45900C404A5 /* Spotify.framework */,
 				C4C845591BDABB1E00C404A5 /* SoundFuze */,
 				C4C845701BDABB1E00C404A5 /* SoundFuzeTests */,
 				C4C8457B1BDABB1E00C404A5 /* SoundFuzeUITests */,
 				C4C845581BDABB1E00C404A5 /* Products */,
+				C4C845DB1BDAC04D00C404A5 /* SystemConfiguration.framework */,
+				C4C8458A1BDABD0A00C404A5 /* AVFoundation.framework */,
 			);
 			sourceTree = "<group>";
 		};
@@ -103,6 +119,7 @@
 				C4C8455C1BDABB1E00C404A5 /* FirstViewController.swift */,
 				C4C8455E1BDABB1E00C404A5 /* SecondViewController.swift */,
 				C4C845601BDABB1E00C404A5 /* Main.storyboard */,
+				C4C845E61BDAC5A700C404A5 /* LoginViewController.swift */,
 				C4C845631BDABB1E00C404A5 /* Assets.xcassets */,
 				C4C845651BDABB1E00C404A5 /* LaunchScreen.storyboard */,
 				C4C845681BDABB1E00C404A5 /* Info.plist */,
@@ -196,6 +213,7 @@
 				TargetAttributes = {
 					C4C845561BDABB1E00C404A5 = {
 						CreatedOnToolsVersion = 7.1;
+						DevelopmentTeam = QTCLYXM49Q;
 					};
 					C4C8456C1BDABB1E00C404A5 = {
 						CreatedOnToolsVersion = 7.1;
@@ -259,6 +277,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C4C845E71BDAC5A700C404A5 /* LoginViewController.swift in Sources */,
 				C4C8455F1BDABB1E00C404A5 /* SecondViewController.swift in Sources */,
 				C4C8455B1BDABB1E00C404A5 /* AppDelegate.swift in Sources */,
 				C4C8455D1BDABB1E00C404A5 /* FirstViewController.swift in Sources */,
@@ -401,10 +420,18 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = SoundFuze/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.xor.SoundFuze;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = Header.h;
 			};
 			name = Debug;
 		};
@@ -412,10 +439,18 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = SoundFuze/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.xor.SoundFuze;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = Header.h;
 			};
 			name = Release;
 		};

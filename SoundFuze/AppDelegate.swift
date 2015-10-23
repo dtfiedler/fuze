@@ -9,12 +9,18 @@
 import UIKit
 
 @UIApplicationMain
+
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
+    let kClientID = "db5f7f0e54ed4342b9de8cc08ddcc29b"
+    let kCallbackURL = "soundFuze://"
+    let kTokenSwapURL = "http://localhost:1234/swap"
+    let kTokenRefreshURL = "http://localhost:1234/refresh"
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+        
+        UIApplication.sharedApplication().openURL((NSURL(string: "soundFuze://")!))
         // Override point for customization after application launch.
         return true
     }
@@ -39,6 +45,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    }
+    
+
+    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
+        print(url);
+//        if (SPTAuth.defaultInstance().canHandleURL(url)){
+//        
+//            SPTAuth.defaultInstance().handleAuthCallbackWithTriggeredAuthURL(url, callback:
+//                {( error: NSError!, session: SPTSession!)-> Void in
+//                if error != nil {
+//                    print("authentication error")
+//                    return
+//                }
+//            
+//                let userDefaults = NSUserDefaults.standardUserDefaults()
+//                let sessionData = NSKeyedArchiver.archivedDataWithRootObject(session)
+//                userDefaults.setObject(sessionData, forKey: "SpotifySession")
+//                userDefaults.synchronize()
+//            
+//            })
+//
+//        }
+        return false
     }
 
 
