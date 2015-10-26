@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C427E6351BDEA1EC0007D34C /* Spotify.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C427E6341BDEA1EC0007D34C /* Spotify.framework */; };
+		C4B506E11BDE974C0096EC11 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4B506E01BDE974C0096EC11 /* AudioToolbox.framework */; };
 		C4C8455B1BDABB1E00C404A5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C8455A1BDABB1E00C404A5 /* AppDelegate.swift */; };
 		C4C8455D1BDABB1E00C404A5 /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C8455C1BDABB1E00C404A5 /* FirstViewController.swift */; };
 		C4C8455F1BDABB1E00C404A5 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C8455E1BDABB1E00C404A5 /* SecondViewController.swift */; };
@@ -17,7 +19,6 @@
 		C4C8457D1BDABB1E00C404A5 /* SoundFuzeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C8457C1BDABB1E00C404A5 /* SoundFuzeUITests.swift */; };
 		C4C8458B1BDABD0A00C404A5 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4C8458A1BDABD0A00C404A5 /* AVFoundation.framework */; };
 		C4C845DC1BDAC04D00C404A5 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4C845DB1BDAC04D00C404A5 /* SystemConfiguration.framework */; };
-		C4C845DE1BDAC45900C404A5 /* Spotify.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4C845DD1BDAC45900C404A5 /* Spotify.framework */; };
 		C4C845E71BDAC5A700C404A5 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C845E61BDAC5A700C404A5 /* LoginViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -39,6 +40,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C427E6341BDEA1EC0007D34C /* Spotify.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Spotify.framework; sourceTree = "<group>"; };
+		C4B506DF1BDE974C0096EC11 /* SoundFuze.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = SoundFuze.entitlements; sourceTree = "<group>"; };
+		C4B506E01BDE974C0096EC11 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		C4C845571BDABB1E00C404A5 /* SoundFuze.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SoundFuze.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C4C8455A1BDABB1E00C404A5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C4C8455C1BDABB1E00C404A5 /* FirstViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstViewController.swift; sourceTree = "<group>"; };
@@ -55,7 +59,6 @@
 		C4C8457E1BDABB1E00C404A5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C4C8458A1BDABD0A00C404A5 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		C4C845DB1BDAC04D00C404A5 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
-		C4C845DD1BDAC45900C404A5 /* Spotify.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Spotify.framework; sourceTree = "<group>"; };
 		C4C845E51BDAC50700C404A5 /* Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Header.h; sourceTree = "<group>"; };
 		C4C845E61BDAC5A700C404A5 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -66,8 +69,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				C4C845DC1BDAC04D00C404A5 /* SystemConfiguration.framework in Frameworks */,
-				C4C845DE1BDAC45900C404A5 /* Spotify.framework in Frameworks */,
 				C4C8458B1BDABD0A00C404A5 /* AVFoundation.framework in Frameworks */,
+				C4B506E11BDE974C0096EC11 /* AudioToolbox.framework in Frameworks */,
+				C427E6351BDEA1EC0007D34C /* Spotify.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -91,8 +95,9 @@
 		C4C8454E1BDABB1E00C404A5 = {
 			isa = PBXGroup;
 			children = (
+				C427E6341BDEA1EC0007D34C /* Spotify.framework */,
+				C4B506E01BDE974C0096EC11 /* AudioToolbox.framework */,
 				C4C845E51BDAC50700C404A5 /* Header.h */,
-				C4C845DD1BDAC45900C404A5 /* Spotify.framework */,
 				C4C845591BDABB1E00C404A5 /* SoundFuze */,
 				C4C845701BDABB1E00C404A5 /* SoundFuzeTests */,
 				C4C8457B1BDABB1E00C404A5 /* SoundFuzeUITests */,
@@ -115,6 +120,7 @@
 		C4C845591BDABB1E00C404A5 /* SoundFuze */ = {
 			isa = PBXGroup;
 			children = (
+				C4B506DF1BDE974C0096EC11 /* SoundFuze.entitlements */,
 				C4C8455A1BDABB1E00C404A5 /* AppDelegate.swift */,
 				C4C8455C1BDABB1E00C404A5 /* FirstViewController.swift */,
 				C4C8455E1BDABB1E00C404A5 /* SecondViewController.swift */,
@@ -214,6 +220,14 @@
 					C4C845561BDABB1E00C404A5 = {
 						CreatedOnToolsVersion = 7.1;
 						DevelopmentTeam = QTCLYXM49Q;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.InterAppAudio = {
+								enabled = 1;
+							};
+						};
 					};
 					C4C8456C1BDABB1E00C404A5 = {
 						CreatedOnToolsVersion = 7.1;
@@ -371,7 +385,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -409,7 +423,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
@@ -420,7 +434,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = SoundFuze/SoundFuze.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -431,6 +447,7 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.xor.SoundFuze;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = Header.h;
 			};
 			name = Debug;
@@ -439,7 +456,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = SoundFuze/SoundFuze.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -450,6 +469,7 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.xor.SoundFuze;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = Header.h;
 			};
 			name = Release;
@@ -521,6 +541,7 @@
 				C4C845831BDABB1E00C404A5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C4C845841BDABB1E00C404A5 /* Build configuration list for PBXNativeTarget "SoundFuzeTests" */ = {
 			isa = XCConfigurationList;
@@ -529,6 +550,7 @@
 				C4C845861BDABB1E00C404A5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		C4C845871BDABB1E00C404A5 /* Build configuration list for PBXNativeTarget "SoundFuzeUITests" */ = {
 			isa = XCConfigurationList;
@@ -537,6 +559,7 @@
 				C4C845891BDABB1E00C404A5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

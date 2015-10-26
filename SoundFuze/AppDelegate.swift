@@ -17,13 +17,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     let session: SPTSession! = nil
     let kClientID = "db5f7f0e54ed4342b9de8cc08ddcc29b"
-    let kCallbackURL = "soundFuze://"
+    let kCallbackURL = "soundfuze://"
     let kTokenSwapURL = "http://localhost:1234/swap"
     let kTokenRefreshURL = "http://localhost:1234/refresh"
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
-        UIApplication.sharedApplication().openURL((NSURL(string: "soundFuze://")!))
+        //UIApplication.sharedApplication().openURL((NSURL(string: "soundFuze://")!))
         // Override point for customization after application launch.
         
 //        let storyboard = UIStoryboard(name: "Main", bundle: nil)
@@ -56,40 +56,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
     
-    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject?) -> Bool{
+    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool{
         
-//        if (SPTAuth.defaultInstance().canHandleURL(url)) {
+        
+        if (SPTAuth.defaultInstance().canHandleURL(url, withDeclaredRedirectURL: NSURL(string: kCallbackURL))) {
 
-//            
-//            SPTAuth.defaultInstance().handleAuthCallbackWithTriggeredAuthURL(url, callback: { (error : NSError?, session : SPTSession?) -> Void in
-//                
-//
-//                if error != nil {
-//                    
-//                    print("Auth error : \(url.description)")
-//                    return
-//                }
-//                
-//                let userDefaults = NSUserDefaults.standardUserDefaults()
-//                let sessionData = NSKeyedArchiver.archivedDataWithRootObject(session!)
-//                userDefaults.setObject(sessionData, forKey: "SpotifySession")
-//                
-//                userDefaults.synchronize()
-//                
-//                NSNotificationCenter.defaultCenter().postNotificationName("SpotifyLoginSuccesfull", object: nil)
-//                
-//            })
-//            
-            return true
-        //}
-        
-//        if (FBSDKApplicationDelegate.sharedInstance().application(application, openURL: url, sourceApplication: sourceApplication, annotation: annotation)) {
-//            
-//            return true
-//        }
-        
-        //return false
-    }
+            SPTAuth.defaultInstance().handleAuthCallbackWithTriggeredAuthURL(url, tokenSwapServiceEndpointAtURL: NSURL(string: kTokenSwapURL), callback: {(error: NSError!, session: SPTSession!) -> Void in
+                if error != nil {
+                    print("Auth error : \(error.description)")
+                    return
+                }
+                
+                let userDefaults = NSUserDefaults.standardUserDefaults()
+                let sessionData = NSKeyedArchiver.archivedDataWithRootObject(session!)
+                userDefaults.setObject(sessionData, forKey: "SpotifySession")
+                
+                userDefaults.synchronize()
+                
+                NSNotificationCenter.defaultCenter().postNotificationName("loginSuccesfull", object: nil)
+                })
+        }
+        return false
+    
+                    }
 
     
 }

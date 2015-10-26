@@ -1,5 +1,10 @@
+//
+//  SPTPartialObject.h
+//  Basic Auth
+//
+//  Created by Daniel Kennett on 14/11/2013.
 /*
- Copyright 2015 Spotify AB
+ Copyright 2013 Spotify AB
 
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
@@ -16,7 +21,8 @@
 
 #import <Foundation/Foundation.h>
 
-/** Represents the base class of a "partial" object on the Spotify service.. */
+/** Represents a "partial" object on the Spotify service. You can promote partial
+ objects to a full objects using `SPTRequest`. */
 @protocol SPTPartialObject <NSObject>
 
 ///----------------------------
