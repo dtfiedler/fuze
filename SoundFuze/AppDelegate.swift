@@ -7,12 +7,15 @@
 //
 
 import UIKit
+import AVFoundation
 
 @UIApplicationMain
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    
+    let session: SPTSession! = nil
     let kClientID = "db5f7f0e54ed4342b9de8cc08ddcc29b"
     let kCallbackURL = "soundFuze://"
     let kTokenSwapURL = "http://localhost:1234/swap"
@@ -22,6 +25,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         UIApplication.sharedApplication().openURL((NSURL(string: "soundFuze://")!))
         // Override point for customization after application launch.
+        
+//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//        let loginVC = storyboard.instantiateViewControllerWithIdentifier("LoginVC") as! LoginViewController
+//        self.window?.rootViewController = loginVC
+//        
+        
         return true
     }
 
@@ -47,29 +56,41 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
     
+    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject?) -> Bool{
+        
+//        if (SPTAuth.defaultInstance().canHandleURL(url)) {
 
-    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
-        print(url);
-//        if (SPTAuth.defaultInstance().canHandleURL(url)){
-//        
-//            SPTAuth.defaultInstance().handleAuthCallbackWithTriggeredAuthURL(url, callback:
-//                {( error: NSError!, session: SPTSession!)-> Void in
+//            
+//            SPTAuth.defaultInstance().handleAuthCallbackWithTriggeredAuthURL(url, callback: { (error : NSError?, session : SPTSession?) -> Void in
+//                
+//
 //                if error != nil {
-//                    print("authentication error")
+//                    
+//                    print("Auth error : \(url.description)")
 //                    return
 //                }
-//            
+//                
 //                let userDefaults = NSUserDefaults.standardUserDefaults()
-//                let sessionData = NSKeyedArchiver.archivedDataWithRootObject(session)
+//                let sessionData = NSKeyedArchiver.archivedDataWithRootObject(session!)
 //                userDefaults.setObject(sessionData, forKey: "SpotifySession")
+//                
 //                userDefaults.synchronize()
-//            
+//                
+//                NSNotificationCenter.defaultCenter().postNotificationName("SpotifyLoginSuccesfull", object: nil)
+//                
 //            })
-//
+//            
+            return true
+        //}
+        
+//        if (FBSDKApplicationDelegate.sharedInstance().application(application, openURL: url, sourceApplication: sourceApplication, annotation: annotation)) {
+//            
+//            return true
 //        }
-        return false
+        
+        //return false
     }
 
-
+    
 }
 
