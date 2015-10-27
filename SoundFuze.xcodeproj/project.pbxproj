@@ -20,6 +20,7 @@
 		C4C8458B1BDABD0A00C404A5 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4C8458A1BDABD0A00C404A5 /* AVFoundation.framework */; };
 		C4C845DC1BDAC04D00C404A5 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4C845DB1BDAC04D00C404A5 /* SystemConfiguration.framework */; };
 		C4C845E71BDAC5A700C404A5 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C845E61BDAC5A700C404A5 /* LoginViewController.swift */; };
+		C4D7071E1BDEE6C800C2EA24 /* TrackTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4D7071D1BDEE6C800C2EA24 /* TrackTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +62,7 @@
 		C4C845DB1BDAC04D00C404A5 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		C4C845E51BDAC50700C404A5 /* Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Header.h; sourceTree = "<group>"; };
 		C4C845E61BDAC5A700C404A5 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		C4D7071D1BDEE6C800C2EA24 /* TrackTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,6 +127,7 @@
 				C4C8455C1BDABB1E00C404A5 /* FirstViewController.swift */,
 				C4C8455E1BDABB1E00C404A5 /* SecondViewController.swift */,
 				C4C845601BDABB1E00C404A5 /* Main.storyboard */,
+				C4D7071D1BDEE6C800C2EA24 /* TrackTableViewCell.swift */,
 				C4C845E61BDAC5A700C404A5 /* LoginViewController.swift */,
 				C4C845631BDABB1E00C404A5 /* Assets.xcassets */,
 				C4C845651BDABB1E00C404A5 /* LaunchScreen.storyboard */,
@@ -291,6 +294,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C4D7071E1BDEE6C800C2EA24 /* TrackTableViewCell.swift in Sources */,
 				C4C845E71BDAC5A700C404A5 /* LoginViewController.swift in Sources */,
 				C4C8455F1BDABB1E00C404A5 /* SecondViewController.swift in Sources */,
 				C4C8455B1BDABB1E00C404A5 /* AppDelegate.swift in Sources */,

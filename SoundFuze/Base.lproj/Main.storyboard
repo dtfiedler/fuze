@@ -3,6 +3,8 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
+        <capability name="Alignment constraints to the first baseline" minToolsVersion="6.0"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--First View Controller-->
@@ -17,20 +19,63 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="sda-sg-Ah7">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="67" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="sda-sg-Ah7">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="556"/>
                                 <animations/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="song" id="Uk1-m8-EPJ">
-                                        <rect key="frame" x="0.0" y="92" width="600" height="44"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="track" rowHeight="67" id="Uk1-m8-EPJ" customClass="TrackTableViewCell" customModule="SoundFuze" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="92" width="600" height="67"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Uk1-m8-EPJ" id="XoQ-tH-kGp">
-                                            <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="66.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="7" translatesAutoresizingMaskIntoConstraints="NO" id="hi5-nn-3uc">
+                                                    <rect key="frame" x="66" y="8" width="161" height="50"/>
+                                                    <animations/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="161" id="fRr-hH-0nW"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Ub0-m1-Jhd">
+                                                    <rect key="frame" x="8" y="8" width="50" height="50"/>
+                                                    <animations/>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2kW-mF-66y">
+                                                    <rect key="frame" x="235" y="8" width="129" height="50.5"/>
+                                                    <animations/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="129" id="f0q-9Q-INv"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="italicSystem" pointSize="12"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
                                             <animations/>
+                                            <constraints>
+                                                <constraint firstItem="Ub0-m1-Jhd" firstAttribute="top" secondItem="XoQ-tH-kGp" secondAttribute="topMargin" id="2KC-wp-s7E"/>
+                                                <constraint firstItem="hi5-nn-3uc" firstAttribute="leading" secondItem="XoQ-tH-kGp" secondAttribute="leadingMargin" constant="58" id="ETX-Bk-q4d"/>
+                                                <constraint firstItem="2kW-mF-66y" firstAttribute="baseline" secondItem="hi5-nn-3uc" secondAttribute="baseline" constant="0.5" id="HF0-YF-LgT"/>
+                                                <constraint firstItem="hi5-nn-3uc" firstAttribute="leading" secondItem="Ub0-m1-Jhd" secondAttribute="trailing" constant="8" id="LVz-x7-Bzv"/>
+                                                <constraint firstItem="Ub0-m1-Jhd" firstAttribute="centerY" secondItem="hi5-nn-3uc" secondAttribute="centerY" id="TWk-yd-4fg"/>
+                                                <constraint firstItem="Ub0-m1-Jhd" firstAttribute="leading" secondItem="XoQ-tH-kGp" secondAttribute="leadingMargin" id="WiZ-5H-oLk"/>
+                                                <constraint firstItem="2kW-mF-66y" firstAttribute="leading" secondItem="hi5-nn-3uc" secondAttribute="trailing" constant="8" id="YPo-DO-ZMf"/>
+                                                <constraint firstItem="2kW-mF-66y" firstAttribute="firstBaseline" secondItem="hi5-nn-3uc" secondAttribute="firstBaseline" id="jNn-2K-RFY"/>
+                                                <constraint firstItem="hi5-nn-3uc" firstAttribute="top" secondItem="XoQ-tH-kGp" secondAttribute="topMargin" id="jzO-6Y-mJr"/>
+                                                <constraint firstItem="hi5-nn-3uc" firstAttribute="centerY" secondItem="XoQ-tH-kGp" secondAttribute="centerY" id="k9Q-vb-iJS"/>
+                                            </constraints>
                                         </tableViewCellContentView>
                                         <animations/>
+                                        <connections>
+                                            <outlet property="albumArtwork" destination="Ub0-m1-Jhd" id="zl7-Gd-FLh"/>
+                                            <outlet property="artist" destination="2kW-mF-66y" id="BVM-IA-mXV"/>
+                                            <outlet property="trackName" destination="hi5-nn-3uc" id="fLO-jE-laT"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
@@ -50,6 +95,9 @@
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="trackTable" destination="sda-sg-Ah7" id="pSZ-48-4ui"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W5J-7L-Pyd" sceneMemberID="firstResponder"/>
             </objects>

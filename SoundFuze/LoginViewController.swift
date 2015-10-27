@@ -44,21 +44,20 @@ class LoginViewController: UIViewController, /*SPTAuthViewDelegate, */SPTAudioSt
                         let sessionData = NSKeyedArchiver.archivedDataWithRootObject(session)
                         userDefaults.setObject(sessionData, forKey: "SpotifySession")
                         userDefaults.synchronize()
-                        
                         self.session = newsession
                         self.updateAfterFirstLogin()
     
                 } else {
-                    print("error refreshing new spotify session")
+                    print("error refresh ing new spotify session")
                 }
             })
             } else {
                 print("session valid")
-                
                 updateAfterFirstLogin()
             }
         } else {
             print("here")
+            
         }
     }
     
@@ -72,14 +71,13 @@ class LoginViewController: UIViewController, /*SPTAuthViewDelegate, */SPTAudioSt
 
         // Dispose of any resources that can be recreated.
         
-        @IBAction func loginWithSpotify(sender: AnyObject) {
-            
-            let spotifyAuth = SPTAuth.defaultInstance()
-            
-            let loginURL = spotifyAuth.loginURLForClientId(kClientID, declaredRedirectURL: NSURL(string: kCallbackURL), scopes: [SPTAuthStreamingScope])
-            
-           UIApplication.sharedApplication().openURL(loginURL)
-            
+    @IBAction func loginWithSpotify(sender: AnyObject) {
+        
+        let spotifyAuth = SPTAuth.defaultInstance()
+        let loginURL = spotifyAuth.loginURLForClientId(kClientID, declaredRedirectURL: NSURL(string: kCallbackURL), scopes: [SPTAuthStreamingScope])
+        
+        UIApplication.sharedApplication().openURL(loginURL)
+        
     }
 
 }

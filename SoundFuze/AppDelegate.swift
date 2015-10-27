@@ -20,16 +20,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let kCallbackURL = "soundfuze://"
     let kTokenSwapURL = "http://localhost:1234/swap"
     let kTokenRefreshURL = "http://localhost:1234/refresh"
+    var loggedIn = false
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        
-        //UIApplication.sharedApplication().openURL((NSURL(string: "soundFuze://")!))
-        // Override point for customization after application launch.
-        
-//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//        let loginVC = storyboard.instantiateViewControllerWithIdentifier("LoginVC") as! LoginViewController
-//        self.window?.rootViewController = loginVC
-//        
         
         return true
     }
@@ -74,6 +67,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 userDefaults.synchronize()
                 
                 NSNotificationCenter.defaultCenter().postNotificationName("loginSuccesfull", object: nil)
+                
+                if (!self.loggedIn){
+                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                    let tabVC = storyboard.instantiateViewControllerWithIdentifier("tabVC") as! UITabBarController
+                    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+                    appDelegate.window?.rootViewController = tabVC
+                    self.loggedIn = true
+                }
                 })
         }
         return false

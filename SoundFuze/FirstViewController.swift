@@ -7,10 +7,13 @@
 //
 
 import UIKit
+import AVFoundation
 
-class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate {
+class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, UITableViewDataSource, UITableViewDelegate {
     
     var window: UIWindow?
+    
+    @IBOutlet weak var trackTable: UITableView!
     
     let kClientID = "db5f7f0e54ed4342b9de8cc08ddcc29b"
     let kCallbackURL = "soundfuze://"
@@ -22,8 +25,13 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate {
     let auth = SPTAuth.defaultInstance()
     var session: SPTSession?
     
+    var queuedTracks: [SPTTrack] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.trackTable.delegate = self
+        self.trackTable.dataSource = self
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: ":updateAfterFirstlogin", name: "spotifyLoginSuccesfull", object: nil)
         // Do any additional setup after loading the view
@@ -54,7 +62,6 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate {
                 })
             } else {
                 print("session valid")
-                
                 playUsingSession(session)
             }
         } else {
@@ -82,17 +89,42 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate {
             }
             
             let track = trackObj as! SPTTrack
+            self.queuedTracks.append(track)
+            self.trackTable.reloadData()
             self.player?.playTrackProvider(track, callback: nil)
         })
         
     }
-
-
-
+    
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return queuedTracks.count
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        func addSong(sender: AnyObject){
+        let cell = tableView.dequeueReusableCellWithIdentifier("track", forIndexPath: indexPath) as! TrackTableViewCell
+        
+        cell.trackName.text = queuedTracks[indexPath.row].name
+        let artistInfo = queuedTracks[indexPath.row].artists.first!.name
+        cell.artist.text = artistInfo
+        
+        let albumImage = queuedTracks[indexPath.row].album.covers.first as! SPTImage
+        let image = albumImage.imageURL.description
+        let imageData = NSData(contentsOfURL: NSURL(string: image)!)
+        
+        cell.albumArtwork.image = UIImage(data: imageData!)
+        
+        return cell
+        
+    }
+
+    func addSong(sender: AnyObject){
             
-        }
+    }
 
 }
 
