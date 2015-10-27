@@ -94,9 +94,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "132"
-            endingLineNumber = "132"
-            landmarkName = "FirstViewController"
-            landmarkType = "3">
+            endingLineNumber = "132">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -445,7 +443,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "126"
             endingLineNumber = "126"
-            landmarkName = "tableView(_:cellForRowAtIndexPath:)"
+            landmarkName = "addSong(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
