@@ -91,7 +91,7 @@
                     </view>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="ka3-ty-YoM">
-                        <barButtonItem key="leftBarButtonItem" image="menu" id="BzO-4K-nKL"/>
+                        <barButtonItem key="leftBarButtonItem" image="dot" id="BzO-4K-nKL"/>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
@@ -118,7 +118,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="KbF-6i-Vo0">
-                        <barButtonItem key="leftBarButtonItem" image="menu" id="v5N-Gh-S9k"/>
+                        <barButtonItem key="leftBarButtonItem" image="dot" id="v5N-Gh-S9k"/>
                         <barButtonItem key="rightBarButtonItem" title="Cancel" id="FfP-1S-zfN"/>
                     </navigationItem>
                 </viewController>
@@ -201,7 +201,7 @@
         <scene sceneID="gnb-IZ-Y1e">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="yOB-L4-7J1" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Queue" image="first" id="acW-dT-cKf"/>
+                    <tabBarItem key="tabBarItem" title="Queue" image="menu" id="acW-dT-cKf"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="czf-yE-UUr">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -221,7 +221,7 @@
         <scene sceneID="V4T-JY-XRW">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Hg8-Em-Al3" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Add" image="second" id="cPa-gy-q4n"/>
+                    <tabBarItem key="tabBarItem" title="Add" image="second" selectedImage="first" id="cPa-gy-q4n"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="87J-0t-gWp">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -294,6 +294,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="dot" width="33" height="33"/>
         <image name="first" width="30" height="30"/>
         <image name="login" width="488" height="88"/>
         <image name="menu" width="22" height="22"/>

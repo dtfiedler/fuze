@@ -54,7 +54,7 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
                         userDefaults.synchronize()
                         
                         self.session = newsession
-                        self.playUsingSession(newsession)
+                        //self.playUsingSession(newsession)
                         
                     } else {
                         print("error refreshing new spotify session")
@@ -62,7 +62,20 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
                 })
             } else {
                 print("session valid")
-                playUsingSession(session)
+                
+                //add track to queue
+                SPTRequest.requestItemAtURI(NSURL(string: "spotify:track:1WJk986df8mpqpktoktlce"), withSession: session, callback: {(error: NSError!, trackObj: AnyObject?) -> Void in
+                    if (error != nil){
+                        print("track lookup got error: \(error)")
+                        return
+                    }
+                    
+                    let track = trackObj as! SPTTrack
+                    self.queuedTracks.append(track)
+                    self.trackTable.reloadData()
+                    //self.player?.playTrackProvider(track, callback: nil)
+                })
+                
             }
         } else {
             print("here")
@@ -70,7 +83,7 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
     }
     
     
-    func playUsingSession(session: SPTSession){
+    func playUsingSession(session: SPTSession, trackIndex: Int){
         if (player == nil){
             player = SPTAudioStreamingController(clientId: kClientID)
         }
@@ -81,19 +94,20 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
                 return
             }
         })
+        print("play")
+        self.player?.playTrackProvider(queuedTracks[trackIndex], callback: nil)
         
-        SPTRequest.requestItemAtURI(NSURL(string: "spotify:track:1WJk986df8mpqpktoktlce"), withSession: session, callback: {(error: NSError!, trackObj: AnyObject?) -> Void in
-            if (error != nil){
-                print("track lookup got error: \(error)")
-                return
-            }
-            
-            let track = trackObj as! SPTTrack
-            self.queuedTracks.append(track)
-            self.trackTable.reloadData()
-            self.player?.playTrackProvider(track, callback: nil)
-        })
-        
+//        SPTRequest.requestItemAtURI(NSURL(string: "spotify:track:1WJk986df8mpqpktoktlce"), withSession: session, callback: {(error: NSError!, trackObj: AnyObject?) -> Void in
+//            if (error != nil){
+//                print("track lookup got error: \(error)")
+//                return
+//            }
+//            
+//            let track = trackObj as! SPTTrack
+//            //self.queuedTracks.append(track)
+//            //self.trackTable.reloadData()
+//            self.player?.playTrackProvider(track, callback: nil)
+//        })
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -105,6 +119,8 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        
+        print("selected track")
         
         let cell = tableView.dequeueReusableCellWithIdentifier("track", forIndexPath: indexPath) as! TrackTableViewCell
         
@@ -119,6 +135,57 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         cell.albumArtwork.image = UIImage(data: imageData!)
         
         return cell
+        
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        let cell = tableView.cellForRowAtIndexPath(indexPath) as! TrackTableViewCell
+        
+        if (cell.backgroundColor != UIColor.lightGrayColor()){
+            cell.backgroundColor = UIColor.lightGrayColor()
+            
+            let userDefaults = NSUserDefaults.standardUserDefaults()
+            
+            if let sessionObj : AnyObject = NSUserDefaults.standardUserDefaults().objectForKey("SpotifySession") {
+                
+                let sessionDataObj : NSData = sessionObj as! NSData
+                let session = NSKeyedUnarchiver.unarchiveObjectWithData(sessionDataObj) as! SPTSession
+                
+                if !session.isValid() {
+                    
+                    SPTAuth.defaultInstance().renewSession(session, withServiceEndpointAtURL: NSURL(string: kTokenRefreshURL), callback: { (error : NSError!, newsession : SPTSession!) -> Void in
+                        
+                        if error == nil {
+                            
+                            let sessionData = NSKeyedArchiver.archivedDataWithRootObject(session)
+                            userDefaults.setObject(sessionData, forKey: "SpotifySession")
+                            userDefaults.synchronize()
+                            
+                            self.session = newsession
+                            self.playUsingSession(newsession, trackIndex: indexPath.row)
+                            
+                        } else {
+                            print("error refreshing new spotify session")
+                        }
+                    })
+                } else {
+                    print("session valid")
+                    playUsingSession(session, trackIndex: indexPath.row)
+                    self.trackTable.reloadData()
+                }
+            }
+        } else {
+            player?.stop({(error: NSError!) -> Void in
+                if (error != nil){
+                    print("Cannot stop playback: \(error)")
+                }
+            })
+            cell.backgroundColor = UIColor.clearColor()
+            self.trackTable.reloadData()
+        }
+ 
+        self.trackTable.deselectRowAtIndexPath(indexPath, animated: false)
         
     }
 
