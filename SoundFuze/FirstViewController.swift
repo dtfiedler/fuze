@@ -25,7 +25,8 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
     let auth = SPTAuth.defaultInstance()
     var session: SPTSession?
     
-    var queuedTracks: [SPTTrack] = []
+    var queuedTracks: [SPTPartialTrack] = []
+    var selected: TrackTableViewCell!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,7 +34,7 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         self.trackTable.delegate = self
         self.trackTable.dataSource = self
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: ":updateAfterFirstlogin", name: "spotifyLoginSuccesfull", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "updateAfterFirstlogin", name: "spotifyLoginSuccesfull", object: nil)
         // Do any additional setup after loading the view
         
         let userDefaults = NSUserDefaults.standardUserDefaults()
@@ -62,19 +63,38 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
                 })
             } else {
                 print("session valid")
+                var album: String = ""
                 
                 //add track to queue
-                SPTRequest.requestItemAtURI(NSURL(string: "spotify:track:1WJk986df8mpqpktoktlce"), withSession: session, callback: {(error: NSError!, trackObj: AnyObject?) -> Void in
+//                SPTRequest.requestItemAtURI(NSURL(string: "spotify:track:1WJk986df8mpqpktoktlce"), withSession: session, callback: {(error: NSError!, trackObj: AnyObject?) -> Void in
+//                    if (error != nil){
+//                        print("track lookup got error: \(error)")
+//                        return
+//                    }
+//                    
+//                    let track = trackObj as! SPTTrack
+//                        album = track.album.uri.description
+//                        self.queuedTracks.append(track)
+//                        self.trackTable.reloadData()
+//                    })
+//                
+//                if (album != ""){
+            
+                SPTRequest.requestItemAtURI(NSURL(string: "spotify:album:7ycBtnsMtyVbbwTfJwRjSP"), withSession: session, callback: {(error: NSError!, albumObj: AnyObject?) -> Void in
                     if (error != nil){
                         print("track lookup got error: \(error)")
                         return
                     }
                     
-                    let track = trackObj as! SPTTrack
-                    self.queuedTracks.append(track)
-                    self.trackTable.reloadData()
-                    //self.player?.playTrackProvider(track, callback: nil)
+                    let album = albumObj as! SPTAlbum
+                    
+                    for tracks in album.tracksForPlayback() {
+                        self.queuedTracks.append(tracks as! SPTPartialTrack)
+                        self.trackTable.reloadData()
+                    }
                 })
+                
+
                 
             }
         } else {
@@ -96,18 +116,6 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         })
         print("play")
         self.player?.playTrackProvider(queuedTracks[trackIndex], callback: nil)
-        
-//        SPTRequest.requestItemAtURI(NSURL(string: "spotify:track:1WJk986df8mpqpktoktlce"), withSession: session, callback: {(error: NSError!, trackObj: AnyObject?) -> Void in
-//            if (error != nil){
-//                print("track lookup got error: \(error)")
-//                return
-//            }
-//            
-//            let track = trackObj as! SPTTrack
-//            //self.queuedTracks.append(track)
-//            //self.trackTable.reloadData()
-//            self.player?.playTrackProvider(track, callback: nil)
-//        })
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -128,21 +136,35 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         let artistInfo = queuedTracks[indexPath.row].artists.first!.name
         cell.artist.text = artistInfo
         
-        let albumImage = queuedTracks[indexPath.row].album.covers.first as! SPTImage
-        let image = albumImage.imageURL.description
-        let imageData = NSData(contentsOfURL: NSURL(string: image)!)
+        let trackURI = queuedTracks[indexPath.row].playableUri
         
-        cell.albumArtwork.image = UIImage(data: imageData!)
+        SPTRequest.requestItemAtURI(trackURI, withSession: session, callback: {(error: NSError!, trackObj: AnyObject?) -> Void in
+                if (error != nil){
+                    print("track lookup got error: \(error)")
+                    return
+                }
+
+                let track = trackObj as! SPTTrack
+                let albumImage = track.album.covers.first as! SPTImage
+                let image = albumImage.imageURL.description
+                let imageData = NSData(contentsOfURL: NSURL(string: image)!)
+                cell.albumArtwork.image = UIImage(data: imageData!)
+            })
         
         return cell
         
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        for (var i = 0; i < queuedTracks.count; i++){
+            let indexPath = NSIndexPath(forRow: i, inSection: 0)
+            self.trackTable.cellForRowAtIndexPath(indexPath)?.backgroundColor = UIColor.clearColor()
+        }
         
         let cell = tableView.cellForRowAtIndexPath(indexPath) as! TrackTableViewCell
         
-        if (cell.backgroundColor != UIColor.lightGrayColor()){
+        if (selected == nil || cell != selected){
+        
             cell.backgroundColor = UIColor.lightGrayColor()
             
             let userDefaults = NSUserDefaults.standardUserDefaults()
@@ -175,12 +197,14 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
                     self.trackTable.reloadData()
                 }
             }
+            selected = cell
         } else {
             player?.stop({(error: NSError!) -> Void in
                 if (error != nil){
                     print("Cannot stop playback: \(error)")
                 }
             })
+            selected = nil
             cell.backgroundColor = UIColor.clearColor()
             self.trackTable.reloadData()
         }

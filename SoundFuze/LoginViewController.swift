@@ -25,7 +25,7 @@ class LoginViewController: UIViewController, /*SPTAuthViewDelegate, */SPTAudioSt
     override func viewDidLoad() {
         super.viewDidLoad()
        
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: ":updateAfterFirstlogin", name: "spotifyLoginSuccesfull", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "updateAfterFirstlogin", name: "spotifyLoginSuccesfull", object: nil)
         // Do any additional setup after loading the view
         
         let userDefaults = NSUserDefaults.standardUserDefaults()

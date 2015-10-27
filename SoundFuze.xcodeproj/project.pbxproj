@@ -21,6 +21,8 @@
 		C4C845DC1BDAC04D00C404A5 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4C845DB1BDAC04D00C404A5 /* SystemConfiguration.framework */; };
 		C4C845E71BDAC5A700C404A5 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C845E61BDAC5A700C404A5 /* LoginViewController.swift */; };
 		C4D7071E1BDEE6C800C2EA24 /* TrackTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4D7071D1BDEE6C800C2EA24 /* TrackTableViewCell.swift */; };
+		C4E95FF51BE0060100417D26 /* HostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E95FF41BE0060100417D26 /* HostViewController.swift */; };
+		C4E95FF71BE0063F00417D26 /* SongServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E95FF61BE0063F00417D26 /* SongServiceManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,6 +65,8 @@
 		C4C845E51BDAC50700C404A5 /* Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Header.h; sourceTree = "<group>"; };
 		C4C845E61BDAC5A700C404A5 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		C4D7071D1BDEE6C800C2EA24 /* TrackTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackTableViewCell.swift; sourceTree = "<group>"; };
+		C4E95FF41BE0060100417D26 /* HostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HostViewController.swift; sourceTree = "<group>"; };
+		C4E95FF61BE0063F00417D26 /* SongServiceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongServiceManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,6 +131,8 @@
 				C4C8455C1BDABB1E00C404A5 /* FirstViewController.swift */,
 				C4C8455E1BDABB1E00C404A5 /* SecondViewController.swift */,
 				C4C845601BDABB1E00C404A5 /* Main.storyboard */,
+				C4E95FF41BE0060100417D26 /* HostViewController.swift */,
+				C4E95FF61BE0063F00417D26 /* SongServiceManager.swift */,
 				C4D7071D1BDEE6C800C2EA24 /* TrackTableViewCell.swift */,
 				C4C845E61BDAC5A700C404A5 /* LoginViewController.swift */,
 				C4C845631BDABB1E00C404A5 /* Assets.xcassets */,
@@ -296,8 +302,10 @@
 			files = (
 				C4D7071E1BDEE6C800C2EA24 /* TrackTableViewCell.swift in Sources */,
 				C4C845E71BDAC5A700C404A5 /* LoginViewController.swift in Sources */,
+				C4E95FF51BE0060100417D26 /* HostViewController.swift in Sources */,
 				C4C8455F1BDABB1E00C404A5 /* SecondViewController.swift in Sources */,
 				C4C8455B1BDABB1E00C404A5 /* AppDelegate.swift in Sources */,
+				C4E95FF71BE0063F00417D26 /* SongServiceManager.swift in Sources */,
 				C4C8455D1BDABB1E00C404A5 /* FirstViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
