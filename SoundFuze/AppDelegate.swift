@@ -51,10 +51,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool{
         
-        
-        if (SPTAuth.defaultInstance().canHandleURL(url, withDeclaredRedirectURL: NSURL(string: kCallbackURL))) {
+        //, withDeclaredRedirectURL: NSURL(string: kCallbackURL)
+        //, tokenSwapServiceEndpointAtURL: NSURL(string: kTokenSwapURL)
+        if (SPTAuth.defaultInstance().canHandleURL(url)) {
 
-            SPTAuth.defaultInstance().handleAuthCallbackWithTriggeredAuthURL(url, tokenSwapServiceEndpointAtURL: NSURL(string: kTokenSwapURL), callback: {(error: NSError!, session: SPTSession!) -> Void in
+            SPTAuth.defaultInstance().handleAuthCallbackWithTriggeredAuthURL(url, callback: {(error: NSError!, session: SPTSession!) -> Void in
                 if error != nil {
                     print("Auth error : \(error.description)")
                     return

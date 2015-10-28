@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		C427E6351BDEA1EC0007D34C /* Spotify.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C427E6341BDEA1EC0007D34C /* Spotify.framework */; };
+		C444CDDF1BE024CE00601D1D /* FUZE.png in Resources */ = {isa = PBXBuildFile; fileRef = C444CDDE1BE024CE00601D1D /* FUZE.png */; };
+		C444CDE11BE1059400601D1D /* ContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C444CDE01BE1059400601D1D /* ContainerViewController.swift */; };
+		C444CDE31BE105B900601D1D /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C444CDE21BE105B900601D1D /* MenuViewController.swift */; };
+		C444CDE71BE110CB00601D1D /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C444CDE61BE110CB00601D1D /* SWRevealViewController.m */; };
+		C444CDE91BE111E300601D1D /* TabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C444CDE81BE111E300601D1D /* TabViewController.swift */; };
 		C4B506E11BDE974C0096EC11 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4B506E01BDE974C0096EC11 /* AudioToolbox.framework */; };
 		C4C8455B1BDABB1E00C404A5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C8455A1BDABB1E00C404A5 /* AppDelegate.swift */; };
 		C4C8455D1BDABB1E00C404A5 /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C8455C1BDABB1E00C404A5 /* FirstViewController.swift */; };
@@ -44,6 +49,12 @@
 
 /* Begin PBXFileReference section */
 		C427E6341BDEA1EC0007D34C /* Spotify.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Spotify.framework; sourceTree = "<group>"; };
+		C444CDDE1BE024CE00601D1D /* FUZE.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FUZE.png; sourceTree = "<group>"; };
+		C444CDE01BE1059400601D1D /* ContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContainerViewController.swift; sourceTree = "<group>"; };
+		C444CDE21BE105B900601D1D /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
+		C444CDE51BE110CB00601D1D /* SWRevealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWRevealViewController.h; sourceTree = "<group>"; };
+		C444CDE61BE110CB00601D1D /* SWRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWRevealViewController.m; sourceTree = "<group>"; };
+		C444CDE81BE111E300601D1D /* TabViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabViewController.swift; sourceTree = "<group>"; };
 		C4B506DF1BDE974C0096EC11 /* SoundFuze.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = SoundFuze.entitlements; sourceTree = "<group>"; };
 		C4B506E01BDE974C0096EC11 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		C4C845571BDABB1E00C404A5 /* SoundFuze.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SoundFuze.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -98,6 +109,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C444CDE41BE110B000601D1D /* SWRevealViewController */ = {
+			isa = PBXGroup;
+			children = (
+				C444CDE51BE110CB00601D1D /* SWRevealViewController.h */,
+				C444CDE61BE110CB00601D1D /* SWRevealViewController.m */,
+			);
+			name = SWRevealViewController;
+			sourceTree = "<group>";
+		};
 		C4C8454E1BDABB1E00C404A5 = {
 			isa = PBXGroup;
 			children = (
@@ -126,15 +146,20 @@
 		C4C845591BDABB1E00C404A5 /* SoundFuze */ = {
 			isa = PBXGroup;
 			children = (
+				C444CDE41BE110B000601D1D /* SWRevealViewController */,
 				C4B506DF1BDE974C0096EC11 /* SoundFuze.entitlements */,
 				C4C8455A1BDABB1E00C404A5 /* AppDelegate.swift */,
 				C4C8455C1BDABB1E00C404A5 /* FirstViewController.swift */,
 				C4C8455E1BDABB1E00C404A5 /* SecondViewController.swift */,
 				C4C845601BDABB1E00C404A5 /* Main.storyboard */,
+				C444CDE81BE111E300601D1D /* TabViewController.swift */,
+				C444CDE21BE105B900601D1D /* MenuViewController.swift */,
+				C444CDE01BE1059400601D1D /* ContainerViewController.swift */,
 				C4E95FF41BE0060100417D26 /* HostViewController.swift */,
 				C4E95FF61BE0063F00417D26 /* SongServiceManager.swift */,
 				C4D7071D1BDEE6C800C2EA24 /* TrackTableViewCell.swift */,
 				C4C845E61BDAC5A700C404A5 /* LoginViewController.swift */,
+				C444CDDE1BE024CE00601D1D /* FUZE.png */,
 				C4C845631BDABB1E00C404A5 /* Assets.xcassets */,
 				C4C845651BDABB1E00C404A5 /* LaunchScreen.storyboard */,
 				C4C845681BDABB1E00C404A5 /* Info.plist */,
@@ -274,6 +299,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C4C845671BDABB1E00C404A5 /* LaunchScreen.storyboard in Resources */,
+				C444CDDF1BE024CE00601D1D /* FUZE.png in Resources */,
 				C4C845641BDABB1E00C404A5 /* Assets.xcassets in Resources */,
 				C4C845621BDABB1E00C404A5 /* Main.storyboard in Resources */,
 			);
@@ -302,9 +328,13 @@
 			files = (
 				C4D7071E1BDEE6C800C2EA24 /* TrackTableViewCell.swift in Sources */,
 				C4C845E71BDAC5A700C404A5 /* LoginViewController.swift in Sources */,
+				C444CDE11BE1059400601D1D /* ContainerViewController.swift in Sources */,
 				C4E95FF51BE0060100417D26 /* HostViewController.swift in Sources */,
+				C444CDE31BE105B900601D1D /* MenuViewController.swift in Sources */,
 				C4C8455F1BDABB1E00C404A5 /* SecondViewController.swift in Sources */,
+				C444CDE91BE111E300601D1D /* TabViewController.swift in Sources */,
 				C4C8455B1BDABB1E00C404A5 /* AppDelegate.swift in Sources */,
+				C444CDE71BE110CB00601D1D /* SWRevealViewController.m in Sources */,
 				C4E95FF71BE0063F00417D26 /* SongServiceManager.swift in Sources */,
 				C4C8455D1BDABB1E00C404A5 /* FirstViewController.swift in Sources */,
 			);

@@ -13,6 +13,8 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
     
     var window: UIWindow?
     
+    @IBOutlet weak var menuButton: UIBarButtonItem!
+    
     @IBOutlet weak var trackTable: UITableView!
     
     let kClientID = "db5f7f0e54ed4342b9de8cc08ddcc29b"
@@ -20,13 +22,15 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
     let kTokenSwapURL = "http://localhost:1234/swap"
     let kTokenRefreshURL = "http://localhost:1234/refresh"
     
-    
     var player: SPTAudioStreamingController?
     let auth = SPTAuth.defaultInstance()
     var session: SPTSession?
     
     var queuedTracks: [SPTPartialTrack] = []
     var selected: TrackTableViewCell!
+    var position: NSTimeInterval?
+    var next = 0
+    var uris: [NSURL] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,7 +38,14 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         self.trackTable.delegate = self
         self.trackTable.dataSource = self
         
+        if self.revealViewController() != nil {
+            menuButton.target = self.revealViewController()
+            menuButton.action = "revealToggle:"
+            self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
+        }
+        
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "updateAfterFirstlogin", name: "spotifyLoginSuccesfull", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "playNext", name: AVPlayerItemDidPlayToEndTimeNotification, object: nil)
         // Do any additional setup after loading the view
         
         let userDefaults = NSUserDefaults.standardUserDefaults()
@@ -46,16 +57,16 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
             
             if !session.isValid() {
                 
-                SPTAuth.defaultInstance().renewSession(session, withServiceEndpointAtURL: NSURL(string: kTokenRefreshURL), callback: { (error : NSError!, newsession : SPTSession!) -> Void in
+                //withServiceEndpointAtURL: NSURL(string: kTokenRefreshURL),
+                
+                SPTAuth.defaultInstance().renewSession(session,  callback: { (error : NSError!, newsession : SPTSession!) -> Void in
                     
                     if error == nil {
                         
                         let sessionData = NSKeyedArchiver.archivedDataWithRootObject(session)
                         userDefaults.setObject(sessionData, forKey: "SpotifySession")
                         userDefaults.synchronize()
-                        
                         self.session = newsession
-                        //self.playUsingSession(newsession)
                         
                     } else {
                         print("error refreshing new spotify session")
@@ -63,10 +74,8 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
                 })
             } else {
                 print("session valid")
-                var album: String = ""
-                
                 //add track to queue
-//                SPTRequest.requestItemAtURI(NSURL(string: "spotify:track:1WJk986df8mpqpktoktlce"), withSession: session, callback: {(error: NSError!, trackObj: AnyObject?) -> Void in
+                //         SPTRequest.requestItemAtURI(NSURL(string: "spotify:track:1WJk986df8mpqpktoktlce"), withSession: session, callback: {(error: NSError!, trackObj: AnyObject?) ->          Void in
 //                    if (error != nil){
 //                        print("track lookup got error: \(error)")
 //                        return
@@ -77,8 +86,8 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
 //                        self.queuedTracks.append(track)
 //                        self.trackTable.reloadData()
 //                    })
-//                
-//                if (album != ""){
+//
+                
             
                 SPTRequest.requestItemAtURI(NSURL(string: "spotify:album:7ycBtnsMtyVbbwTfJwRjSP"), withSession: session, callback: {(error: NSError!, albumObj: AnyObject?) -> Void in
                     if (error != nil){
@@ -90,12 +99,12 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
                     
                     for tracks in album.tracksForPlayback() {
                         self.queuedTracks.append(tracks as! SPTPartialTrack)
+                        self.uris.append(tracks.uri)
                         self.trackTable.reloadData()
                     }
                 })
                 
-
-                
+                self.player?.queueURIs(uris, clearQueue: true, callback: nil)
             }
         } else {
             print("here")
@@ -115,7 +124,10 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
             }
         })
         print("play")
-        self.player?.playTrackProvider(queuedTracks[trackIndex], callback: nil)
+        self.player?.playURIs(uris, fromIndex: Int32(trackIndex), callback: nil)
+        if (trackIndex < uris.count - 1){
+            next += 1
+        }
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -128,10 +140,8 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        print("selected track")
-        
         let cell = tableView.dequeueReusableCellWithIdentifier("track", forIndexPath: indexPath) as! TrackTableViewCell
-        
+
         cell.trackName.text = queuedTracks[indexPath.row].name
         let artistInfo = queuedTracks[indexPath.row].artists.first!.name
         cell.artist.text = artistInfo
@@ -175,8 +185,8 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
                 let session = NSKeyedUnarchiver.unarchiveObjectWithData(sessionDataObj) as! SPTSession
                 
                 if !session.isValid() {
-                    
-                    SPTAuth.defaultInstance().renewSession(session, withServiceEndpointAtURL: NSURL(string: kTokenRefreshURL), callback: { (error : NSError!, newsession : SPTSession!) -> Void in
+                    // withServiceEndpointAtURL: NSURL(string: kTokenRefreshURL),
+                    SPTAuth.defaultInstance().renewSession(session, callback: { (error : NSError!, newsession : SPTSession!) -> Void in
                         
                         if error == nil {
                             
@@ -199,6 +209,7 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
             }
             selected = cell
         } else {
+            
             player?.stop({(error: NSError!) -> Void in
                 if (error != nil){
                     print("Cannot stop playback: \(error)")
@@ -217,5 +228,20 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
             
     }
 
+    func playNext(sender:AnyObject){
+        print("playing next song")
+    }
+    
+    @IBAction func showMenu(sender: AnyObject) {
+        NSNotificationCenter.defaultCenter().postNotificationName("toggleMenu", object: nil)
+    }
+    
+    func audioStreaming(audioStreaming: SPTAudioStreamingController!, didStopPlayingTrack trackUri: NSURL!) {
+        print("next track")
+        let indexPath = NSIndexPath(forRow: next, inSection: 0)
+        self.trackTable.selectRowAtIndexPath(indexPath, animated: true, scrollPosition: UITableViewScrollPosition.Middle)
+        playUsingSession(self.session!, trackIndex: next)
+    }
+    
 }
 

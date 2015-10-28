@@ -23,7 +23,7 @@ class HostViewController: UIViewController, UITableViewDelegate, UITableViewData
     @IBOutlet weak var peersTable: UITableView!
     @IBOutlet weak var connectionStatus: UILabel!
     
-    let songService = SongServiceManager()
+    var songService =  SongServiceManager()
     
     var peerNames: [String] = []
     
@@ -32,7 +32,7 @@ class HostViewController: UIViewController, UITableViewDelegate, UITableViewData
         songService.delegate = self
         peersTable.delegate = self
         peersTable.dataSource = self
-
+        
         // Do any additional setup after loading the view.
     }
 
@@ -41,17 +41,26 @@ class HostViewController: UIViewController, UITableViewDelegate, UITableViewData
         // Dispose of any resources that can be recreated.
     }
     
+    
+    @IBAction func refresh(sender: AnyObject) {
+        self.connectionStatus.text = "Refreshing..."
+//        songService.delete(self)
+//        self.songService = SongServiceManager()
+    }
+    
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return songService.count - 1
+        return peerNames.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        print("table refreshed")
         let cell = tableView.dequeueReusableCellWithIdentifier("peerID", forIndexPath: indexPath) as UITableViewCell
         if (!peerNames.isEmpty && indexPath.row < peerNames.count){
+
             cell.textLabel!.text = peerNames[indexPath.row]
         }
         return cell
@@ -75,10 +84,18 @@ extension HostViewController : SongServiceManagerDelegate {
     
     func connectedDevicesChanged(manager: SongServiceManager, connectedDevices: [String]) {
         NSOperationQueue.mainQueue().addOperationWithBlock {
-            self.connectionStatus.text = "Select the users you would like to fuze with!"
-            self.peerNames = connectedDevices
-            self.peersTable.reloadData()
+            if (!connectedDevices.isEmpty){
+                self.connectionStatus.text = "Select the users you would like to fuze with!"
+                self.peerNames = connectedDevices
+                print("Connected to \(connectedDevices)")
+                self.peersTable.reloadData()
+            } else {
+                self.connectionStatus.text = "No fuzers found..."
+                self.peerNames = []
+            }
         }
+        
+        self.peersTable.reloadData()
     }
     
     func colorChanged(manager: SongServiceManager, colorString: String) {

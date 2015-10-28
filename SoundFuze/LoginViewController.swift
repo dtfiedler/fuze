@@ -16,7 +16,6 @@ class LoginViewController: UIViewController, /*SPTAuthViewDelegate, */SPTAudioSt
     let kCallbackURL = "soundfuze://"
     let kTokenSwapURL = "http://localhost:1234/swap"
     let kTokenRefreshURL = "http://localhost:1234/refresh"
-
     
     var player: SPTAudioStreamingController?
     let auth = SPTAuth.defaultInstance()
@@ -37,7 +36,7 @@ class LoginViewController: UIViewController, /*SPTAuthViewDelegate, */SPTAudioSt
             
             if !session.isValid() {
                 
-                SPTAuth.defaultInstance().renewSession(session, withServiceEndpointAtURL: NSURL(string: kTokenRefreshURL), callback: { (error : NSError!, newsession : SPTSession!) -> Void in
+                SPTAuth.defaultInstance().renewSession(session, callback: { (error : NSError!, newsession : SPTSession!) -> Void in
                     
                     if error == nil {
     
@@ -63,9 +62,9 @@ class LoginViewController: UIViewController, /*SPTAuthViewDelegate, */SPTAudioSt
     
     func updateAfterFirstLogin(){
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let tabVC = storyboard.instantiateViewControllerWithIdentifier("tabVC") as! UITabBarController
+        let containerVC = storyboard.instantiateViewControllerWithIdentifier("containerVC") 
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        appDelegate.window?.rootViewController = tabVC
+        appDelegate.window?.rootViewController = containerVC
     }
     
 
@@ -74,7 +73,13 @@ class LoginViewController: UIViewController, /*SPTAuthViewDelegate, */SPTAudioSt
     @IBAction func loginWithSpotify(sender: AnyObject) {
         
         let spotifyAuth = SPTAuth.defaultInstance()
-        let loginURL = spotifyAuth.loginURLForClientId(kClientID, declaredRedirectURL: NSURL(string: kCallbackURL), scopes: [SPTAuthStreamingScope])
+        spotifyAuth.redirectURL = NSURL(string: kCallbackURL)
+        spotifyAuth.tokenRefreshURL = NSURL(string: kTokenRefreshURL)
+        spotifyAuth.clientID = kClientID
+        
+        let loginURL = spotifyAuth.loginURL
+
+        //et loginURL = spotifyAuth.loginURLForClientId(kClientID, declaredRedirectURL: NSURL(string: kCallbackURL), scopes: [SPTAuthStreamingScope])
         
         UIApplication.sharedApplication().openURL(loginURL)
         

@@ -9,9 +9,18 @@
 import UIKit
 
 class SecondViewController: UIViewController, UISearchControllerDelegate {
-
+    
+    var spoitfySearch: SPTSearch?
+    
+    var results = ""
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //SPTSearch.createRequestForSearchWithQuery("jackson", queryType: SPTSearchQueryType.QueryTypeArtist, accessToken: nil)
+        SPTSearch.performSearchWithQuery("jackson", queryType: SPTSearchQueryType.QueryTypeArtist, accessToken: nil, callback: nil)
+        
+    
         // Do any additional setup after loading the view, typically from a nib.
     }
 
@@ -32,7 +41,6 @@ class SecondViewController: UIViewController, UISearchControllerDelegate {
         let cell = UITableViewCell()
         return cell
     }
-
 
 }
 
