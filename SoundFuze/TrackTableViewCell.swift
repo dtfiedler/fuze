@@ -13,6 +13,7 @@ class TrackTableViewCell: UITableViewCell {
     @IBOutlet weak var trackName: UILabel!
     @IBOutlet weak var artist: UILabel!
     @IBOutlet weak var albumArtwork: UIImageView!
+    @IBOutlet weak var progress: UIProgressView!
     
     override func awakeFromNib() {
         super.awakeFromNib()

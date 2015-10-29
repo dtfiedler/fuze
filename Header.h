@@ -10,6 +10,6 @@
 #define Header_h
 
 #import <Spotify/Spotify.h>
-#import "SWRevealViewController.h"
+#import <CoreData/CoreData.h>
 
 #endif /* Header_h */

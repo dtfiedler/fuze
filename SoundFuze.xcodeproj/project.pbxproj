@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C40ECFE31BE29B7400E93BA0 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C40ECFE21BE29B7400E93BA0 /* CoreData.framework */; };
+		C40ED05F1BE29DA700E93BA0 /* fuze.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C40ED05D1BE29DA700E93BA0 /* fuze.xcdatamodeld */; };
 		C427E6351BDEA1EC0007D34C /* Spotify.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C427E6341BDEA1EC0007D34C /* Spotify.framework */; };
 		C444CDDF1BE024CE00601D1D /* FUZE.png in Resources */ = {isa = PBXBuildFile; fileRef = C444CDDE1BE024CE00601D1D /* FUZE.png */; };
 		C444CDE11BE1059400601D1D /* ContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C444CDE01BE1059400601D1D /* ContainerViewController.swift */; };
@@ -48,6 +50,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C40ECFE21BE29B7400E93BA0 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		C40ED05E1BE29DA700E93BA0 /* hello.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = hello.xcdatamodel; sourceTree = "<group>"; };
 		C427E6341BDEA1EC0007D34C /* Spotify.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Spotify.framework; sourceTree = "<group>"; };
 		C444CDDE1BE024CE00601D1D /* FUZE.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FUZE.png; sourceTree = "<group>"; };
 		C444CDE01BE1059400601D1D /* ContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContainerViewController.swift; sourceTree = "<group>"; };
@@ -85,6 +89,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C40ECFE31BE29B7400E93BA0 /* CoreData.framework in Frameworks */,
 				C4C845DC1BDAC04D00C404A5 /* SystemConfiguration.framework in Frameworks */,
 				C4C8458B1BDABD0A00C404A5 /* AVFoundation.framework in Frameworks */,
 				C4B506E11BDE974C0096EC11 /* AudioToolbox.framework in Frameworks */,
@@ -121,6 +126,7 @@
 		C4C8454E1BDABB1E00C404A5 = {
 			isa = PBXGroup;
 			children = (
+				C40ECFE21BE29B7400E93BA0 /* CoreData.framework */,
 				C427E6341BDEA1EC0007D34C /* Spotify.framework */,
 				C4B506E01BDE974C0096EC11 /* AudioToolbox.framework */,
 				C4C845E51BDAC50700C404A5 /* Header.h */,
@@ -151,6 +157,7 @@
 				C4C8455A1BDABB1E00C404A5 /* AppDelegate.swift */,
 				C4C8455C1BDABB1E00C404A5 /* FirstViewController.swift */,
 				C4C8455E1BDABB1E00C404A5 /* SecondViewController.swift */,
+				C40ED05D1BE29DA700E93BA0 /* fuze.xcdatamodeld */,
 				C4C845601BDABB1E00C404A5 /* Main.storyboard */,
 				C444CDE81BE111E300601D1D /* TabViewController.swift */,
 				C444CDE21BE105B900601D1D /* MenuViewController.swift */,
@@ -329,6 +336,7 @@
 				C4D7071E1BDEE6C800C2EA24 /* TrackTableViewCell.swift in Sources */,
 				C4C845E71BDAC5A700C404A5 /* LoginViewController.swift in Sources */,
 				C444CDE11BE1059400601D1D /* ContainerViewController.swift in Sources */,
+				C40ED05F1BE29DA700E93BA0 /* fuze.xcdatamodeld in Sources */,
 				C4E95FF51BE0060100417D26 /* HostViewController.swift in Sources */,
 				C444CDE31BE105B900601D1D /* MenuViewController.swift in Sources */,
 				C4C8455F1BDABB1E00C404A5 /* SecondViewController.swift in Sources */,
@@ -604,6 +612,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		C40ED05D1BE29DA700E93BA0 /* fuze.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				C40ED05E1BE29DA700E93BA0 /* hello.xcdatamodel */,
+			);
+			currentVersion = C40ED05E1BE29DA700E93BA0 /* hello.xcdatamodel */;
+			path = fuze.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = C4C8454F1BDABB1E00C404A5 /* Project object */;
 }
