@@ -165,7 +165,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="bYx-Dg-jmH">
-                                <rect key="frame" x="0.0" y="64" width="600" height="44"/>
+                                <rect key="frame" x="0.0" y="66" width="600" height="44"/>
                                 <animations/>
                                 <textInputTraits key="textInputTraits"/>
                                 <connections>
@@ -173,7 +173,7 @@
                                 </connections>
                             </searchBar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="50" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="QS2-Hb-IEk">
-                                <rect key="frame" x="0.0" y="108" width="600" height="463"/>
+                                <rect key="frame" x="0.0" y="110" width="600" height="441"/>
                                 <animations/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
@@ -181,10 +181,10 @@
                                         <rect key="frame" x="0.0" y="28" width="600" height="67"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="YTj-UL-K3v" id="vPH-pF-dm0">
-                                            <rect key="frame" x="0.0" y="0.0" width="600" height="66.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="67"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Xpl-Bl-B4g">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Xpl-Bl-B4g">
                                                     <rect key="frame" x="8" y="8" width="50" height="50"/>
                                                     <animations/>
                                                 </imageView>
@@ -236,33 +236,24 @@
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="bYx-Dg-jmH" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leading" id="1kT-tv-aer"/>
-                            <constraint firstItem="QS2-Hb-IEk" firstAttribute="bottom" secondItem="Djb-ko-YwX" secondAttribute="top" constant="20" id="Xbc-ck-C6q"/>
-                            <constraint firstAttribute="trailing" secondItem="bYx-Dg-jmH" secondAttribute="trailing" id="aWM-1U-DmW"/>
-                            <constraint firstItem="QS2-Hb-IEk" firstAttribute="trailing" secondItem="bYx-Dg-jmH" secondAttribute="trailing" id="fcf-3r-b7n"/>
-                            <constraint firstItem="bYx-Dg-jmH" firstAttribute="top" secondItem="L7p-HK-0SC" secondAttribute="bottom" constant="20" id="fq1-1A-3kI"/>
-                            <constraint firstItem="QS2-Hb-IEk" firstAttribute="top" secondItem="bYx-Dg-jmH" secondAttribute="bottom" id="hIb-yK-ibA"/>
-                            <constraint firstItem="QS2-Hb-IEk" firstAttribute="leading" secondItem="bYx-Dg-jmH" secondAttribute="leading" id="neH-t4-fLg"/>
+                            <constraint firstItem="QS2-Hb-IEk" firstAttribute="top" secondItem="bYx-Dg-jmH" secondAttribute="bottom" id="2Xx-1a-Hgb"/>
+                            <constraint firstAttribute="bottom" secondItem="QS2-Hb-IEk" secondAttribute="bottom" constant="49" id="A9Y-DJ-KLt"/>
+                            <constraint firstItem="bYx-Dg-jmH" firstAttribute="leading" secondItem="QS2-Hb-IEk" secondAttribute="leading" id="FtC-Cq-6Jr"/>
+                            <constraint firstItem="bYx-Dg-jmH" firstAttribute="top" secondItem="L7p-HK-0SC" secondAttribute="bottom" constant="22" id="LEM-hO-r3i"/>
+                            <constraint firstAttribute="trailing" secondItem="QS2-Hb-IEk" secondAttribute="trailing" id="TUg-zq-qwy"/>
+                            <constraint firstItem="bYx-Dg-jmH" firstAttribute="leading" secondItem="QS5-Rx-YEW" secondAttribute="leading" id="dxP-Vm-Wlf"/>
+                            <constraint firstItem="QS2-Hb-IEk" firstAttribute="trailing" secondItem="bYx-Dg-jmH" secondAttribute="trailing" id="fiB-IS-782"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="KbF-6i-Vo0">
                         <barButtonItem key="leftBarButtonItem" image="dot" id="v5N-Gh-S9k"/>
                     </navigationItem>
                     <connections>
-                        <outlet property="searchDisplayController" destination="vwx-9U-J0e" id="ePF-gQ-laG"/>
+                        <outlet property="searchBar" destination="bYx-Dg-jmH" id="tW8-1D-d2P"/>
                         <outlet property="searchTable" destination="QS2-Hb-IEk" id="Szx-o2-fNA"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Nw-L8-lE0" sceneMemberID="firstResponder"/>
-                <searchDisplayController id="vwx-9U-J0e">
-                    <connections>
-                        <outlet property="delegate" destination="8rJ-Kc-sve" id="6td-ss-9bo"/>
-                        <outlet property="searchBar" destination="bYx-Dg-jmH" id="Dm9-mR-jCn"/>
-                        <outlet property="searchContentsController" destination="8rJ-Kc-sve" id="wFy-CT-aoA"/>
-                        <outlet property="searchResultsDataSource" destination="8rJ-Kc-sve" id="emE-hZ-xGV"/>
-                        <outlet property="searchResultsDelegate" destination="8rJ-Kc-sve" id="PGd-Kf-5D3"/>
-                    </connections>
-                </searchDisplayController>
             </objects>
             <point key="canvasLocation" x="1562" y="360"/>
         </scene>

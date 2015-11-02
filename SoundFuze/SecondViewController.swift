@@ -8,13 +8,13 @@
 
 import UIKit
 
-class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate, UISearchDisplayDelegate {
     
-    
-    var spoitfySearch: SPTSearch?
+    var spotifySearch: SPTSearch!
     var session: SPTSession?
-    var results: [SPTTrack] = []
+    var results: [SPTPartialTrack] = []
     
+    @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var searchTable: UITableView!
     
     override func viewDidLoad() {
@@ -22,6 +22,7 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
         
         self.searchTable.delegate = self
         self.searchTable.dataSource = self
+        self.searchBar.delegate = self
 
         let userDefaults = NSUserDefaults.standardUserDefaults()
         if let sessionObj : AnyObject = NSUserDefaults.standardUserDefaults().objectForKey("SpotifySession") {
@@ -48,19 +49,19 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 })
             } else {
                 print("session valid")
-
-                SPTRequest.requestItemAtURI(NSURL(string: "spotify:track:1WJk986df8mpqpktoktlce"), withSession: session, callback: {(error: NSError!, trackObj: AnyObject?) ->          Void in
-                        if (error != nil){
-                            print("track lookup got error: \(error)")
-                            return
-                        }
-                        print("track found")
-    
-                        let track = trackObj as! SPTTrack
-                            self.results.append(track)
-                            NSNotificationCenter.defaultCenter().postNotificationName("addToQueue", object: nil, userInfo: ["track": track])
-                        })
-                self.searchTable.reloadData()
+//
+//                SPTRequest.requestItemAtURI(NSURL(string: "spotify:track:1WJk986df8mpqpktoktlce"), withSession: session, callback: {(error: NSError!, trackObj: AnyObject?) ->          Void in
+//                        if (error != nil){
+//                            print("track lookup got error: \(error)")
+//                            return
+//                        }
+//                        print("track found")
+//    
+//                        let track = trackObj as! SPTTrack
+//                            self.results.append(track)
+//                            NSNotificationCenter.defaultCenter().postNotificationName("addToQueue", object: nil, userInfo: ["track": track, "user": UIDevice.currentDevice().name])
+//                        })
+//                self.searchTable.reloadData()
                 
             }
         } else {
@@ -73,18 +74,17 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     override func viewWillAppear(animated: Bool) {
-        SPTRequest.requestItemAtURI(NSURL(string: "spotify:track:1WJk986df8mpqpktoktlce"), withSession: session, callback: {(error: NSError!, trackObj: AnyObject?) ->          Void in
-            if (error != nil){
-                print("track lookup got error: \(error)")
-                return
-            }
-            print("track found")
-            
-            let track = trackObj as! SPTTrack
-            self.results.append(track)
-            NSNotificationCenter.defaultCenter().postNotificationName("addToQueue", object: nil, userInfo: ["track": track])
-        })
-        self.searchTable.reloadData()
+//        SPTRequest.requestItemAtURI(NSURL(string: "spotify:track:1WJk986df8mpqpktoktlce"), withSession: session, callback: {(error: NSError!, trackObj: AnyObject?) ->          Void in
+//            if (error != nil){
+//                print("track lookup got error: \(error)")
+//                return
+//            }
+//            
+//            let track = trackObj as! SPTTrack
+//            self.results.append(track)
+//            NSNotificationCenter.defaultCenter().postNotificationName("addToQueue", object: nil, userInfo: ["track": track, "user": UIDevice.currentDevice().name])
+//        })
+//        self.searchTable.reloadData()
 
     }
     
@@ -93,18 +93,28 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
         return 1
     }
     
-    func tableView(tableView:UITableView!, numberOfRowsInSection section:Int) -> Int {
+    func tableView(tableView:UITableView, numberOfRowsInSection section:Int) -> Int {
         return self.results.count
     }
     
-    func tableView(tableView:UITableView!, cellForRowAtIndexPath indexPath:NSIndexPath!) -> UITableViewCell! {
+    func tableView(tableView:UITableView, cellForRowAtIndexPath indexPath:NSIndexPath) -> UITableViewCell {
                 let cell = tableView.dequeueReusableCellWithIdentifier("track", forIndexPath: indexPath) as! TrackTableViewCell
         
                 if (indexPath.row <= self.results.count){
                     let resultOption = self.results[indexPath.row]
                     cell.trackName.text = resultOption.name
                     cell.artist.text = resultOption.artists.first!.name
-                    cell.imageView?.hidden = true
+                    
+                    if let albumImage: SPTImage? = resultOption.album.covers.first as! SPTImage{
+                        if let image = albumImage!.imageURL.description as? String {
+                            if let imageData: NSData? = NSData(contentsOfURL: NSURL(string: image)!) {
+                
+                                cell.albumArtwork.image = UIImage(data: imageData!)
+                            }
+                        }
+                    }
+
+
                 }
 
     
@@ -112,10 +122,50 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        
+        let track = results[indexPath.row]
+        SPTRequest.requestItemAtURI(track.uri, withSession: nil, callback: {(error: NSError!, trackObj: AnyObject?) ->  Void in
+                    if (error != nil){
+                            print("track lookup got error: \(error)")
+                            return
+                    }
+                                    print("track found")
+            
+                                    let track = trackObj as! SPTTrack
+                                        NSNotificationCenter.defaultCenter().postNotificationName("addToQueue", object: nil, userInfo: ["track": track, "user": UIDevice.currentDevice().name])
+                })
+                            self.searchTable.reloadData()
+
     }
     
     
+    func searchBar(searchBar: UISearchBar, textDidChange searchText: String?) {
+        self.results.removeAll()
+        self.searchTable.reloadData()
+        
+        if searchText != nil {
+        SPTRequest.performSearchWithQuery(searchText, queryType: SPTSearchQueryType.QueryTypeTrack, offset: 0, session: nil, callback: {(error: NSError!, result: AnyObject?) -> Void in
+            if (error != nil){
+                print("Error searching: \(error)")
+                return
+            }
+            let trackListPage = result as! SPTListPage
+            
+            for item in trackListPage.items {
+                if (!self.results.contains(item as! SPTPartialTrack)){
+                    self.results.append(item as! SPTPartialTrack)
+                    
+                }
+                }
+            self.searchTable.reloadData()
+            
+            
+        })
+        }
+    }
+
+    func searchBarTextDidBeginEditing(searchBar: UISearchBar) {
+        //
+    }
 
 
 

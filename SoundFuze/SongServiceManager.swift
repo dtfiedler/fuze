@@ -18,7 +18,6 @@ class SongServiceManager : NSObject {
     private let serviceAdvertiser : MCNearbyServiceAdvertiser
     private let serviceBrowser : MCNearbyServiceBrowser
     
-    var count = 0
     var delegate : SongServiceManagerDelegate?
     
     lazy var session : MCSession = {
@@ -42,7 +41,13 @@ class SongServiceManager : NSObject {
         self.serviceBrowser.stopBrowsingForPeers()
     }
     
-    
+    func updateQueue(track : String) {
+        NSLog("%@", "update queue: \(track)")
+        if session.connectedPeers.count > 0 {
+                print("sending update")
+               try? self.session.sendData(track.dataUsingEncoding(NSUTF8StringEncoding)!, toPeers: session.connectedPeers, withMode: MCSessionSendDataMode.Reliable)
+        }
+    }
 }
 
 extension SongServiceManager : MCNearbyServiceAdvertiserDelegate {
@@ -69,12 +74,10 @@ extension SongServiceManager : MCNearbyServiceBrowserDelegate {
         NSLog("%a", "found peer: \(peerID)")
         NSLog("%@", "invitePeer: \(peerID)")
         browser.invitePeer(peerID, toSession: self.session, withContext: nil, timeout: 10)
-        count += 1
     }
     
     func browser(browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
         NSLog("%@", "lostPeer: \(peerID)")
-        count -= 1
     }
     
 }
@@ -102,7 +105,7 @@ extension SongServiceManager : MCSessionDelegate {
     func session(session: MCSession!, didReceiveData data: NSData!, fromPeer peerID: MCPeerID!) {
         NSLog("%@", "didReceiveData: \(data)")
         let str = NSString(data: data, encoding: NSUTF8StringEncoding) as! String
-        self.delegate!.colorChanged(self, colorString: str)
+        self.delegate!.addToQueue(self, track: str)
     }
     
     func session(session: MCSession!, didReceiveStream stream: NSInputStream!, withName streamName: String!, fromPeer peerID: MCPeerID!) {
@@ -116,7 +119,7 @@ extension SongServiceManager : MCSessionDelegate {
     func session(session: MCSession!, didStartReceivingResourceWithName resourceName: String!, fromPeer peerID: MCPeerID!, withProgress progress: NSProgress!) {
         NSLog("%@", "didStartReceivingResourceWithName")
     }
-    
+
     
 }
 

@@ -19,8 +19,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let session: SPTSession! = nil
     let kClientID = "db5f7f0e54ed4342b9de8cc08ddcc29b"
     let kCallbackURL = "soundfuze://"
-    let kTokenSwapURL = "http://localhost:1234/swap"
-    let kTokenRefreshURL = "http://localhost:1234/refresh"
+//    let kTokenSwapURL = "http://localhost:1234/swap"
+//    let kTokenRefreshURL = "http://localhost:1234/refresh"
+    
+        let kTokenSwapURL = "http://Dylans-MacBook-Pro.local:1234/swap"
+        let kTokenRefreshURL = "http://Dylans-MacBook-Pro.local:1234/refresh"
+    
     var loggedIn = false
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
@@ -64,9 +68,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 let userDefaults = NSUserDefaults.standardUserDefaults()
                 let sessionData = NSKeyedArchiver.archivedDataWithRootObject(session!)
                 userDefaults.setObject(sessionData, forKey: "SpotifySession")
-                
                 userDefaults.synchronize()
-                
                 NSNotificationCenter.defaultCenter().postNotificationName("loginSuccesfull", object: nil)
                 
                 if (!self.loggedIn){
