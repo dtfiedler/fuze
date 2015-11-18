@@ -32,8 +32,6 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
             
             if !session.isValid() {
                 
-                //withServiceEndpointAtURL: NSURL(string: kTokenRefreshURL),
-                
                 SPTAuth.defaultInstance().renewSession(session,  callback: { (error : NSError!, newsession : SPTSession!) -> Void in
                     
                     if error == nil {
@@ -49,19 +47,6 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 })
             } else {
                 print("session valid")
-//
-//                SPTRequest.requestItemAtURI(NSURL(string: "spotify:track:1WJk986df8mpqpktoktlce"), withSession: session, callback: {(error: NSError!, trackObj: AnyObject?) ->          Void in
-//                        if (error != nil){
-//                            print("track lookup got error: \(error)")
-//                            return
-//                        }
-//                        print("track found")
-//    
-//                        let track = trackObj as! SPTTrack
-//                            self.results.append(track)
-//                            NSNotificationCenter.defaultCenter().postNotificationName("addToQueue", object: nil, userInfo: ["track": track, "user": UIDevice.currentDevice().name])
-//                        })
-//                self.searchTable.reloadData()
                 
             }
         } else {
@@ -74,17 +59,7 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     override func viewWillAppear(animated: Bool) {
-//        SPTRequest.requestItemAtURI(NSURL(string: "spotify:track:1WJk986df8mpqpktoktlce"), withSession: session, callback: {(error: NSError!, trackObj: AnyObject?) ->          Void in
-//            if (error != nil){
-//                print("track lookup got error: \(error)")
-//                return
-//            }
-//            
-//            let track = trackObj as! SPTTrack
-//            self.results.append(track)
-//            NSNotificationCenter.defaultCenter().postNotificationName("addToQueue", object: nil, userInfo: ["track": track, "user": UIDevice.currentDevice().name])
-//        })
-//        self.searchTable.reloadData()
+        NSNotificationCenter.defaultCenter().postNotificationName("toggleMenu", object: nil)
 
     }
     
@@ -105,7 +80,7 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
                     cell.trackName.text = resultOption.name
                     cell.artist.text = resultOption.artists.first!.name
                     
-                    if let albumImage: SPTImage? = resultOption.album.covers.first as! SPTImage{
+                    if let albumImage: SPTImage? = resultOption.album.covers.first as! SPTImage {
                         if let image = albumImage!.imageURL.description as? String {
                             if let imageData: NSData? = NSData(contentsOfURL: NSURL(string: image)!) {
                 
@@ -137,13 +112,25 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
 
     }
     
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        self.view.endEditing(true)
+    }
+    
+    func searchBarTextDidEndEditing(searchBar: UISearchBar) {
+        
+    }
+    
+    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+        self.searchBar.resignFirstResponder()
+    }
     
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String?) {
         self.results.removeAll()
         self.searchTable.reloadData()
         
+        
         if searchText != nil {
-        SPTRequest.performSearchWithQuery(searchText, queryType: SPTSearchQueryType.QueryTypeTrack, offset: 0, session: nil, callback: {(error: NSError!, result: AnyObject?) -> Void in
+        SPTRequest.performSearchWithQuery(self.searchBar.text, queryType: SPTSearchQueryType.QueryTypeTrack, offset: 0, session: nil, callback: {(error: NSError!, result: AnyObject?) -> Void in
             if (error != nil){
                 print("Error searching: \(error)")
                 return
@@ -158,18 +145,16 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 }
             self.searchTable.reloadData()
             
-            
         })
         }
     }
 
     func searchBarTextDidBeginEditing(searchBar: UISearchBar) {
-        //
     }
-
-
-
     
-
+    @IBAction func showMenu(sender: AnyObject) {
+        NSNotificationCenter.defaultCenter().postNotificationName("toggleMenu", object: nil)
+    }
+    
 }
 

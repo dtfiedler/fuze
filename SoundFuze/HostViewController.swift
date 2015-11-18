@@ -47,7 +47,6 @@ class HostViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     @IBAction func refresh(sender: AnyObject) {
         self.connectionStatus.text = "Refreshing..."
-        //songService.sendColor("red")
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -74,7 +73,6 @@ class HostViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         if ((cell.accessoryView == nil) && cell.textLabel!.text != ""){
             cell.accessoryType = UITableViewCellAccessoryType.Checkmark
-            connectWithUsers(cell.textLabel!.text!)
         } else {
             cell.accessoryType = UITableViewCellAccessoryType.None
         }
@@ -86,10 +84,6 @@ class HostViewController: UIViewController, UITableViewDelegate, UITableViewData
 
 extension HostViewController : SongServiceManagerDelegate {
     
-    func connectWithUsers(user: String){
-        
-    }
-    
     func connectedDevicesChanged(manager: SongServiceManager, connectedDevices: [String]) {
         NSOperationQueue.mainQueue().addOperationWithBlock {
             if (!connectedDevices.isEmpty){
@@ -100,6 +94,7 @@ extension HostViewController : SongServiceManagerDelegate {
             } else {
                 self.connectionStatus.text = "No fuzers found..."
                 self.peerNames = []
+
             }
         }
         
@@ -124,21 +119,19 @@ extension HostViewController : SongServiceManagerDelegate {
     }
     
     func addToQueue(manager: SongServiceManager, track: String) {
-        NSOperationQueue.mainQueue().addOperationWithBlock {
-                var alertview = UIAlertView()
-                alertview.title = "Queue updated by..."
-                alertview.message = "The queue has been updated"
-                alertview.delegate = self
-                alertview.addButtonWithTitle("Okay")
-                alertview.show()
-                self.dismissViewControllerAnimated(true, completion: nil)
-            NSNotificationCenter.defaultCenter().postNotificationName("addToQueue", object: nil, userInfo: ["track": track])
-        }
+        //NSOperationQueue.mainQueue().addOperationWithBlock {
+            
+            NSNotificationCenter.defaultCenter().postNotificationName("addOthersToQueue", object: nil, userInfo: ["track": track])
+        //}
     }
     
     func refreshConnection(manager: SongServiceManager){
         NSLog("refreshing connection")
         self.peersTable.reloadData()
+    }
+    
+    @IBAction func showMenu(sender: AnyObject) {
+        NSNotificationCenter.defaultCenter().postNotificationName("toggleMenu", object: nil)
     }
 }
 

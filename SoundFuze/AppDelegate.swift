@@ -67,16 +67,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 
                 let userDefaults = NSUserDefaults.standardUserDefaults()
                 let sessionData = NSKeyedArchiver.archivedDataWithRootObject(session!)
-                userDefaults.setObject(sessionData, forKey: "SpotifySession")
-                userDefaults.synchronize()
-                NSNotificationCenter.defaultCenter().postNotificationName("loginSuccesfull", object: nil)
-                
-                if (!self.loggedIn){
+                if (session!.isValid()){
                     let storyboard = UIStoryboard(name: "Main", bundle: nil)
                     let tabVC = storyboard.instantiateViewControllerWithIdentifier("tabVC") as! UITabBarController
                     let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
                     appDelegate.window?.rootViewController = tabVC
-                    self.loggedIn = true
+                    userDefaults.setObject(sessionData, forKey: "SpotifySession")
+                    userDefaults.synchronize()
+                    NSNotificationCenter.defaultCenter().postNotificationName("loginSuccesfull", object: nil)
                 }
                 })
             }

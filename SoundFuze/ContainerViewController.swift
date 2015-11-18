@@ -30,9 +30,6 @@ class ContainerViewController: UIViewController {
     }
     
     // Cleanup notifications added in viewDidLoad
-    deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
-    }
     
     
     func toggleMenu(){

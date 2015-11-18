@@ -45,7 +45,12 @@ class SongServiceManager : NSObject {
         NSLog("%@", "update queue: \(track)")
         if session.connectedPeers.count > 0 {
                 print("sending update")
-               try? self.session.sendData(track.dataUsingEncoding(NSUTF8StringEncoding)!, toPeers: session.connectedPeers, withMode: MCSessionSendDataMode.Reliable)
+            var error: NSError?
+            do { try self.session.sendData(track.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!, toPeers: self.session.connectedPeers, withMode: MCSessionSendDataMode.Reliable)
+                    print("sent song successfully")
+            } catch {
+            print("\(error)")
+        }
         }
     }
 }
@@ -73,7 +78,7 @@ extension SongServiceManager : MCNearbyServiceBrowserDelegate {
     func browser(browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?){
         NSLog("%a", "found peer: \(peerID)")
         NSLog("%@", "invitePeer: \(peerID)")
-        browser.invitePeer(peerID, toSession: self.session, withContext: nil, timeout: 10)
+        browser.invitePeer(peerID, toSession: self.session, withContext: nil, timeout: 30)
     }
     
     func browser(browser: MCNearbyServiceBrowser, lostPeer peerID: MCPeerID) {
@@ -104,8 +109,9 @@ extension SongServiceManager : MCSessionDelegate {
     
     func session(session: MCSession!, didReceiveData data: NSData!, fromPeer peerID: MCPeerID!) {
         NSLog("%@", "didReceiveData: \(data)")
-        let str = NSString(data: data, encoding: NSUTF8StringEncoding) as! String
-        self.delegate!.addToQueue(self, track: str)
+        let str: NSString? = NSString(data: data!, encoding: NSUTF8StringEncoding)
+        let string: String? = str as String!
+        self.delegate!.addToQueue(self, track: string!)
     }
     
     func session(session: MCSession!, didReceiveStream stream: NSInputStream!, withName streamName: String!, fromPeer peerID: MCPeerID!) {

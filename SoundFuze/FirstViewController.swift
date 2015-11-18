@@ -47,6 +47,7 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
 
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "updateAfterFirstlogin", name: "loginSuccesfull", object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "add:", name: "addToQueue", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "addOthers:", name: "addOthersToQueue", object: nil)
         
         // Do any additional setup after loading the view
         
@@ -147,9 +148,6 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         })
         
         self.player?.playURIs(uris, fromIndex: Int32(trackIndex), callback: nil)
-        if (trackIndex < uris.count - 1){
-            next += 1
-        }
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -168,8 +166,7 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         cell.trackName.text = queuedTracks[indexPath.row].name
         let artistInfo = queuedTracks[indexPath.row].artists.first!.name
         cell.artist.text = artistInfo
-        //cell.progress.hidden = true
-        
+            
         let trackURI = queuedTracks[indexPath.row].playableUri
         
         SPTRequest.requestItemAtURI(trackURI, withSession: session, callback: {(error: NSError!, trackObj: AnyObject?) -> Void in
@@ -218,7 +215,6 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         let cell = tableView.cellForRowAtIndexPath(indexPath) as! TrackTableViewCell
         
         cell.progress.hidden = false
-        ///timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "updateProgress", userInfo:  ["cell": cell, "indexPath": indexPath], repeats: true)
         
         if (selected == nil || cell != selected){
         
@@ -245,11 +241,13 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
                             userDefaults.synchronize()
                             
                             if (newsession != nil){
-                            self.session = newsession
+                                self.session = newsession
                             //now play music using this new session and update global session variabl
+                                self.playUsingSession(newsession, trackIndex: indexPath.row)
                                 
+                            } else {
+                                self.playUsingSession(session, trackIndex: indexPath.row)
                             }
-                            self.playUsingSession(self.session, trackIndex: indexPath.row)
                         } else {
                             print("error refreshing new spotify session")
                         }
@@ -295,9 +293,10 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
     func add(notification: NSNotification){
        let userInfo: Dictionary <String,AnyObject!> = notification.userInfo as! Dictionary<String,
         AnyObject!>
-        let newTrack = userInfo["track"]
-        NSLog("Adding \(newTrack) to queue")
-        let trackURI = newTrack!.uri as! NSURL
+        
+        let newTrack = userInfo["track"] as! SPTTrack
+        let trackURI = newTrack.uri as NSURL
+        
         
         if (uris.contains(trackURI)){
             //don't add same tracks twice without asking
@@ -307,11 +306,60 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         } else {
             //add to end of queue
             self.uris.append(trackURI)
-            self.queuedTracks.append(newTrack as! SPTPartialTrack)
+            self.queuedTracks.append(newTrack as SPTPartialTrack)
+        }
+        
+        self.trackTable.reloadData()
+    }
+    
+    func addOthers(notification: NSNotification){
+        let userInfo: Dictionary <String,AnyObject!> = notification.userInfo as! Dictionary<String,
+            AnyObject!>
+        
+        let newTrackString = userInfo["track"] as! String
+        var trackURI: NSURL?
+        var newTrack: SPTPartialTrack?
+        
+            trackURI = NSURL(string: newTrackString)
+            
+        SPTRequest.requestItemAtURI(trackURI, withSession: self.session, callback: {(error: NSError?, trackObj: AnyObject?)-> Void in
+            if (error != nil){
+                print("error: \(error)")
+                return
+            }
+            newTrack = trackObj as! SPTPartialTrack
+            self.queuedTracks.append(newTrack! as SPTPartialTrack)
+            self.trackTable.reloadData()
+        })
+
+        
+        if (uris.contains(trackURI!)){
+            NSLog("Track already in queue")
+        } else {
+            //add to end of queue
+            self.uris.append(trackURI!)
         }
         
         self.trackTable.reloadData()
         
+    }
+    
+    func request(trackURI: NSURL!)-> SPTPartialTrack{
+        var newTrack: SPTPartialTrack!
+        SPTRequest.requestItemAtURI(trackURI, withSession: self.session, callback: {(error: NSError?, trackObj: AnyObject?)-> Void in
+            if (error != nil){
+                print("error: \(error)")
+                return
+            }
+             newTrack = trackObj as! SPTPartialTrack
+        })
+        
+        return newTrack
+        
+    }
+    
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
 
     //save current queue as a playlist in CoreData
@@ -343,18 +391,24 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
     }
     
     func playNext(sender:AnyObject){
-            player?.skipNext(nil)
+        player?.skipNext(nil)
     }
     
     @IBAction func showMenu(sender: AnyObject) {
         NSNotificationCenter.defaultCenter().postNotificationName("toggleMenu", object: nil)
     }
     
-    func audioStreaming(audioStreaming: SPTAudioStreamingController!, didStopPlayingTrack trackUri: NSURL!) {
-        print("next track")
-        let indexPath = NSIndexPath(forRow: next, inSection: 0)
-        self.trackTable.selectRowAtIndexPath(indexPath, animated: true, scrollPosition: UITableViewScrollPosition.Middle)
-        playUsingSession(self.session, trackIndex: next)
+    func audioStreaming(audioStreaming: SPTAudioStreamingController!, didChangeToTrack trackMetadata: [NSObject : AnyObject]!) {
+        let uri = trackMetadata[SPTAudioStreamingMetadataTrackURI] as! NSURL
+        for i in 0...uris.count {
+            if uri == uris[i]{
+                let indexPath = NSIndexPath(forRow: i, inSection: 0)
+                trackTable.selectRowAtIndexPath(indexPath, animated: true, scrollPosition: UITableViewScrollPosition.Middle)
+            }
+            
+            
+        }
+        
     }
     
 }
