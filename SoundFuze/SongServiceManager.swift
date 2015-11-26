@@ -37,8 +37,8 @@ class SongServiceManager : NSObject {
     }
     
     deinit {
-        self.serviceAdvertiser.stopAdvertisingPeer()
-        self.serviceBrowser.stopBrowsingForPeers()
+        //self.serviceAdvertiser.stopAdvertisingPeer()
+        //self.serviceBrowser.stopBrowsingForPeers()
     }
     
     func updateQueue(track : String) {
@@ -78,6 +78,7 @@ extension SongServiceManager : MCNearbyServiceBrowserDelegate {
     func browser(browser: MCNearbyServiceBrowser, foundPeer peerID: MCPeerID, withDiscoveryInfo info: [String : String]?){
         NSLog("%a", "found peer: \(peerID)")
         NSLog("%@", "invitePeer: \(peerID)")
+        self.delegate?.connectedDevicesChanged(self, connectedDevices: session.connectedPeers.map({$0.displayName}))
         browser.invitePeer(peerID, toSession: self.session, withContext: nil, timeout: 30)
     }
     

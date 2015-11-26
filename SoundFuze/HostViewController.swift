@@ -34,11 +34,16 @@ class HostViewController: UIViewController, UITableViewDelegate, UITableViewData
         songService.delegate = self
         peersTable.delegate = self
         peersTable.dataSource = self
-         NSNotificationCenter.defaultCenter().addObserver(self, selector: "add:", name: "addToQueue", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "add:", name: "addToQueue", object: nil)
+        //NSNotificationCenter.defaultCenter().postNotificationName("closeMenu", object: nil)
         
         // Do any additional setup after loading the view.
     }
-
+    
+    override func viewWillAppear(animated: Bool) {
+        NSNotificationCenter.defaultCenter().postNotificationName("closeMenu", object: nil)
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -82,6 +87,9 @@ class HostViewController: UIViewController, UITableViewDelegate, UITableViewData
     
 }
 
+
+
+
 extension HostViewController : SongServiceManagerDelegate {
     
     func connectedDevicesChanged(manager: SongServiceManager, connectedDevices: [String]) {
@@ -119,10 +127,8 @@ extension HostViewController : SongServiceManagerDelegate {
     }
     
     func addToQueue(manager: SongServiceManager, track: String) {
-        //NSOperationQueue.mainQueue().addOperationWithBlock {
             
             NSNotificationCenter.defaultCenter().postNotificationName("addOthersToQueue", object: nil, userInfo: ["track": track])
-        //}
     }
     
     func refreshConnection(manager: SongServiceManager){

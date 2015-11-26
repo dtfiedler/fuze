@@ -1,14 +1,14 @@
 //
-//  MenuViewController.swift
+//  ViewController.swift
 //  SoundFuze
 //
-//  Created by Dylan Fiedler on 10/28/15.
+//  Created by Dylan Fiedler on 11/25/15.
 //  Copyright © 2015 xor. All rights reserved.
 //
 
 import UIKit
 
-class MenuViewController: UITableViewController {
+class ViewController: UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()

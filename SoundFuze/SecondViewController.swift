@@ -23,6 +23,7 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
         self.searchTable.delegate = self
         self.searchTable.dataSource = self
         self.searchBar.delegate = self
+        self.searchTable.estimatedRowHeight = 67
 
         let userDefaults = NSUserDefaults.standardUserDefaults()
         if let sessionObj : AnyObject = NSUserDefaults.standardUserDefaults().objectForKey("SpotifySession") {
@@ -56,11 +57,6 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
         self.searchTable.reloadData()
     
         // Do any additional setup after loading the view, typically from a nib.
-    }
-    
-    override func viewWillAppear(animated: Bool) {
-        NSNotificationCenter.defaultCenter().postNotificationName("toggleMenu", object: nil)
-
     }
     
     
@@ -117,19 +113,17 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func searchBarTextDidEndEditing(searchBar: UISearchBar) {
-        
     }
     
     func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+         NSNotificationCenter.defaultCenter().postNotificationName("closeMenu", object: nil)
         self.searchBar.resignFirstResponder()
     }
     
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String?) {
         self.results.removeAll()
         self.searchTable.reloadData()
-        
-        
-        if searchText != nil {
+        if ((searchText?.isEmpty) == false) {
         SPTRequest.performSearchWithQuery(self.searchBar.text, queryType: SPTSearchQueryType.QueryTypeTrack, offset: 0, session: nil, callback: {(error: NSError!, result: AnyObject?) -> Void in
             if (error != nil){
                 print("Error searching: \(error)")
@@ -148,13 +142,16 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
         })
         }
     }
+    
+    func searchBarShouldBeginEditing(searchBar: UISearchBar) -> Bool {
+        return true
+    }
 
     func searchBarTextDidBeginEditing(searchBar: UISearchBar) {
     }
     
-    @IBAction func showMenu(sender: AnyObject) {
-        NSNotificationCenter.defaultCenter().postNotificationName("toggleMenu", object: nil)
+    func searchDisplayControllerDidBeginSearch(controller: UISearchDisplayController) {
+        sleep(2)
     }
-    
 }
 

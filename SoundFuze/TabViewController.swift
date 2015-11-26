@@ -8,30 +8,49 @@
 
 import UIKit
 
-class TabViewController: UITabBarController {
-
+class TabViewController: UITabBarController, ENSideMenuDelegate {
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-
-
-        // Do any additional setup after loading the view.
+        self.sideMenuController()?.sideMenu?.delegate = self
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    
+    @IBAction func toggleSideMenu(sender: AnyObject) {
+        toggleSideMenuView()
     }
-    */
+    
+    @IBAction func saveQueue(sender: AnyObject) {
+        NSNotificationCenter.defaultCenter().postNotificationName("saveQueue", object: nil)
+    }
+    
+    
+    // MARK: - ENSideMenu Delegate
+    func sideMenuWillOpen() {
+        print("sideMenuWillOpen")
+    }
+    
+    func sideMenuWillClose() {
+        print("sideMenuWillClose")
+    }
+    
+    func sideMenuShouldOpenSideMenu() -> Bool {
+        print("sideMenuShouldOpenSideMenu")
+        return true
+    }
+    
+    func sideMenuDidClose() {
+        print("sideMenuDidClose")
+    }
+    
+    func sideMenuDidOpen() {
+        print("sideMenuDidOpen")
+    }
 
 }

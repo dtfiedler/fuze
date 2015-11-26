@@ -15,14 +15,14 @@ class ContainerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.layer.shadowOpacity = 0.8
-        self.view.layer.shadowColor = UIColor.grayColor().CGColor
+        
         // Initially close menu programmatically.  This needs to be done on the main thread initially in order to work.
         dispatch_async(dispatch_get_main_queue()) {
             self.closeMenu(false)
         }
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "toggleMenu", name: "toggleMenu", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "close", name: "closeMenu", object: nil)
         
         // Close the menu when the device rotates
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "rotated", name: UIDeviceOrientationDidChangeNotification, object: nil)
@@ -33,7 +33,15 @@ class ContainerViewController: UIViewController {
     
     
     func toggleMenu(){
-        scrollView.contentOffset.x == 0  ? closeMenu() : openMenu()
+        if (scrollView.contentOffset.x == 250)  {
+            openMenu()
+        } else {
+            closeMenu()
+        }
+    }
+    
+    func close(){
+        self.closeMenu(false);
     }
     
     func closeMenu(animated:Bool = true){
@@ -49,7 +57,7 @@ class ContainerViewController: UIViewController {
         if UIDeviceOrientationIsLandscape(UIDevice.currentDevice().orientation) {
             dispatch_async(dispatch_get_main_queue()) {
                 print("closing menu on rotate")
-                self.closeMenu()
+                self.closeMenu(true)
             }
         }
     }
@@ -84,6 +92,7 @@ extension ContainerViewController : UIScrollViewDelegate {
         } else {
             scrollView.pagingEnabled = true
         }
+        self.closeMenu(false)
     }
     
     func scrollViewDidEndDecelerating(scrollView: UIScrollView) {

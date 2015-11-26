@@ -44,10 +44,12 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         
         self.trackTable.delegate = self
         self.trackTable.dataSource = self
-
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "updateAfterFirstlogin", name: "loginSuccesfull", object: nil)
+        //self.loadPlaylist()
+       // NSNotificationCenter.defaultCenter().addObserver(self, selector: "updateAfterFirstlogin", name: "loginSuccesfull", object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "add:", name: "addToQueue", object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "addOthers:", name: "addOthersToQueue", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "loadPlaylist:", name: "loadPlaylist", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "saveQueue", name: "saveQueue", object: nil)
         
         // Do any additional setup after loading the view
         
@@ -82,7 +84,15 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
     }
     }
     
-    func fetch() {
+//    func load(){
+//        self.loadPlaylist()
+//    }
+    
+    func loadPlaylist(notification: NSNotification) {
+        let userInfo: Dictionary <String,AnyObject!> = notification.userInfo as! Dictionary<String,
+            AnyObject!>
+        let playlist = userInfo["playlist"] as! String
+        
         //1
         let appDelegate =
         UIApplication.sharedApplication().delegate as! AppDelegate
@@ -98,16 +108,18 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
             let results =
             try managedContext.executeFetchRequest(fetchRequest)
             savedURIs = results as! [NSManagedObject]
-            print(savedURIs.count)
-            
+            loadTracks(session!, playlist: playlist)
         } catch let error as NSError {
             print("Could not fetch \(error), \(error.userInfo)")
         }
     }
-
     
-    func loadTracks(session: SPTSession!){
+    func loadTracks(session: SPTSession!, playlist: String){
+
+        
         for trackURI in savedURIs {
+    
+        if ((trackURI.valueForKey("name") as! NSString).lowercaseString == playlist.lowercaseString){
         SPTRequest.requestItemAtURI(NSURL(string: trackURI.valueForKey("uri") as! String), withSession: session, callback: {(error: NSError!, trackObj: AnyObject?) -> Void in
             if (error != nil){
                 print("track lookup got error: \(error)")
@@ -115,12 +127,12 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
             }
             
             let track = trackObj as! SPTTrack
-            
             self.queuedTracks.append(track as! SPTPartialTrack)
             self.uris.append(track.uri)
             self.trackTable.reloadData()
            })
            self.player?.queueURIs(self.uris, clearQueue: true, callback: nil)
+        }
         }
     }
     
@@ -131,8 +143,8 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
     }
     
     @IBAction func mostRecentQueue(sender: AnyObject) {
-        self.fetch()
-        self.loadTracks(session)
+//        self.loadPlaylist()
+//        self.loadTracks(session)
     }
     
     func playUsingSession(session: SPTSession!, trackIndex: Int){
@@ -161,7 +173,6 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCellWithIdentifier("track", forIndexPath: indexPath) as! TrackTableViewCell
-
         if (indexPath.row < queuedTracks.count){
         cell.trackName.text = queuedTracks[indexPath.row].name
         let artistInfo = queuedTracks[indexPath.row].artists.first!.name
@@ -192,18 +203,12 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
     
     var timer:  NSTimer!
     func updateProgress(){
-        var i: Float = 0.0
-        var cell: TrackTableViewCell! = timer.userInfo!["cell"] as! TrackTableViewCell
-        //let time = ((player!.currentPlaybackPosition)/(player!.currentTrackDuration))
-        cell.progress.progress = i + 0.05
-        let reload = timer.userInfo!["indexPath"] as! NSIndexPath
-        print(reload)
-        //if (reload){
-            self.trackTable.reloadRowsAtIndexPaths([reload], withRowAnimation: UITableViewRowAnimation.None)
-        //}
-        //cell.progress.progress = time
-        //cell.progress.progress = player?.currentPlaybackPosition as! Float
-        
+        let cell: TrackTableViewCell! = timer.userInfo!["cell"] as! TrackTableViewCell
+        let currentProgress = self.player?.currentPlaybackPosition
+        let duration = self.player?.currentTrackDuration
+        let min = floor(currentProgress!);
+        let current = min/duration!
+        cell.progress.setProgress(Float(current), animated: true)
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
@@ -213,8 +218,6 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         }
         
         let cell = tableView.cellForRowAtIndexPath(indexPath) as! TrackTableViewCell
-        
-        cell.progress.hidden = false
         
         if (selected == nil || cell != selected){
         
@@ -260,12 +263,14 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
                 }
             }
             selected = cell
+            timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: Selector("updateProgress"), userInfo: ["cell": cell], repeats: true)
         } else {
             player?.stop({(error: NSError!) -> Void in
                 if (error != nil){
                     print("Cannot stop playback: \(error)")
                 }
             })
+            timer.invalidate()
             selected = nil
             cell.backgroundColor = UIColor.clearColor()
             self.trackTable.reloadData()
@@ -363,29 +368,45 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
     }
 
     //save current queue as a playlist in CoreData
-    @IBAction func saveQueue(sender: AnyObject) {
-        //1
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    func saveQueue() {
         
-        let managedContext = appDelegate.managedObjectContext
         
-        //2
-        let entity =  NSEntityDescription.entityForName("SongURIs",
-            inManagedObjectContext:managedContext)
+        let alertController = UIAlertController(title: "Playlist name", message: "What would you like the name of your playlist to be?", preferredStyle: .Alert)
         
-        for trackURI in uris {
-            let song = NSManagedObject(entity: entity!,
-            insertIntoManagedObjectContext: managedContext)
-            song.setValue(trackURI.description, forKey: "uri")
-        }
-
-        do {
-            try managedContext.save()
-        } catch let error as NSError  {
-            print("Could not save \(error), \(error.userInfo)")
-        }
+        let defaultAction = UIAlertAction(title: "Save", style: .Default, handler:{ (action: UIAlertAction!) in
+            
+            let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+            let managedContext = appDelegate.managedObjectContext
+            
+            //2
+            let entity =  NSEntityDescription.entityForName("SongURIs", inManagedObjectContext:managedContext)
+            let song = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedContext)
+    
+            for trackURI in self.uris {
+                song.setValue(trackURI.description, forKey: "uri")
+            }
+            
+            let text = alertController.textFields![0].text as String!
+            
+            song.setValue(text, forKey: "name")
+            
+            do {
+                try managedContext.save()
+            } catch let error as NSError  {
+                print("Could not save \(error), \(error.userInfo)")
+            }
+            
+        })
         
+        alertController.addAction(defaultAction)
+        
+        alertController.addTextFieldWithConfigurationHandler({(textField: UITextField!) in
+            textField.placeholder = "Name"
+        })
+    
+        self.presentViewController(alertController, animated: true, completion: nil)
     }
+    
     @IBAction func next(sender: AnyObject) {
          player?.skipNext(nil)
     }

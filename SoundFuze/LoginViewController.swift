@@ -44,7 +44,7 @@ class LoginViewController: UIViewController, /*SPTAuthViewDelegate, */SPTAudioSt
                         userDefaults.setObject(sessionData, forKey: "SpotifySession")
                         userDefaults.synchronize()
                         self.session = newsession
-                        self.updateAfterFirstLogin()
+                        //self.updateAfterFirstLogin()
     
                 } else {
                     print("error refresh ing new spotify session")
@@ -52,7 +52,7 @@ class LoginViewController: UIViewController, /*SPTAuthViewDelegate, */SPTAudioSt
             })
             } else {
                 print("session valid")
-                updateAfterFirstLogin()
+                //updateAfterFirstLogin()
             }
         } else {
             print("here")
@@ -62,7 +62,7 @@ class LoginViewController: UIViewController, /*SPTAuthViewDelegate, */SPTAudioSt
     
     func updateAfterFirstLogin(){
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let containerVC = storyboard.instantiateViewControllerWithIdentifier("menuContainer")
+        let containerVC = storyboard.instantiateViewControllerWithIdentifier("navController") as! MyNavigationController
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         appDelegate.window?.rootViewController = containerVC
     }

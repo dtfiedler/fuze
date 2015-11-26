@@ -29,6 +29,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
+        var navigationBarAppearace = UINavigationBar.appearance()
+        let tabBarAppearence = UITabBar.appearance()
+        
+        navigationBarAppearace.barTintColor = UIColor(red: 101/255, green: 3/255, blue: 166/255, alpha: 1.0)
+        navigationBarAppearace.tintColor = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 1)
+        navigationBarAppearace.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
+        tabBarAppearence.barTintColor = UIColor(red: 101/255, green: 3/255, blue: 166/255, alpha: 1.0)
+        tabBarAppearence.tintColor = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 1)
+        UIApplication.sharedApplication().setStatusBarStyle(UIStatusBarStyle.LightContent, animated: true)
+        
         return true
     }
 
@@ -69,7 +79,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 let sessionData = NSKeyedArchiver.archivedDataWithRootObject(session!)
                 if (session!.isValid()){
                     let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                    let tabVC = storyboard.instantiateViewControllerWithIdentifier("tabVC") as! UITabBarController
+                    let tabVC = storyboard.instantiateViewControllerWithIdentifier("navController") as! MyNavigationController
                     let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
                     appDelegate.window?.rootViewController = tabVC
                     userDefaults.setObject(sessionData, forKey: "SpotifySession")

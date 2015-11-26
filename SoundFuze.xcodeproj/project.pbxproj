@@ -9,11 +9,38 @@
 /* Begin PBXBuildFile section */
 		C40ECFE31BE29B7400E93BA0 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C40ECFE21BE29B7400E93BA0 /* CoreData.framework */; };
 		C40ED05F1BE29DA700E93BA0 /* fuze.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C40ED05D1BE29DA700E93BA0 /* fuze.xcdatamodeld */; };
+		C426D1681C06175B006A6946 /* ENSideMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = C426D1661C06175B006A6946 /* ENSideMenu.swift */; };
+		C426D1691C06175B006A6946 /* ENSideMenuNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C426D1671C06175B006A6946 /* ENSideMenuNavigationController.swift */; };
+		C426D16B1C0619A3006A6946 /* MyNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C426D16A1C0619A3006A6946 /* MyNavigationController.swift */; };
+		C426D16D1C061A4E006A6946 /* MyMenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C426D16C1C061A4E006A6946 /* MyMenuTableViewController.swift */; };
+		C426D16F1C061C04006A6946 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C426D16E1C061C04006A6946 /* ViewController.swift */; };
+		C426D18A1C062647006A6946 /* Contents.json in Resources */ = {isa = PBXBuildFile; fileRef = C426D1751C062647006A6946 /* Contents.json */; };
+		C426D18B1C062647006A6946 /* Icon-40.png in Resources */ = {isa = PBXBuildFile; fileRef = C426D1761C062647006A6946 /* Icon-40.png */; };
+		C426D18C1C062647006A6946 /* Icon-40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C426D1771C062647006A6946 /* Icon-40@2x.png */; };
+		C426D18D1C062647006A6946 /* Icon-40@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C426D1781C062647006A6946 /* Icon-40@3x.png */; };
+		C426D18E1C062647006A6946 /* Icon-60@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C426D1791C062647006A6946 /* Icon-60@2x.png */; };
+		C426D18F1C062647006A6946 /* Icon-60@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C426D17A1C062647006A6946 /* Icon-60@3x.png */; };
+		C426D1901C062647006A6946 /* Icon-76.png in Resources */ = {isa = PBXBuildFile; fileRef = C426D17B1C062647006A6946 /* Icon-76.png */; };
+		C426D1911C062647006A6946 /* Icon-76@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C426D17C1C062647006A6946 /* Icon-76@2x.png */; };
+		C426D1921C062647006A6946 /* Icon-Small.png in Resources */ = {isa = PBXBuildFile; fileRef = C426D17D1C062647006A6946 /* Icon-Small.png */; };
+		C426D1931C062647006A6946 /* Icon-Small@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C426D17E1C062647006A6946 /* Icon-Small@2x.png */; };
+		C426D1941C062647006A6946 /* Icon-Small@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C426D17F1C062647006A6946 /* Icon-Small@3x.png */; };
+		C426D1951C062647006A6946 /* Icon-60.png in Resources */ = {isa = PBXBuildFile; fileRef = C426D1801C062647006A6946 /* Icon-60.png */; };
+		C426D1961C062647006A6946 /* Icon-72.png in Resources */ = {isa = PBXBuildFile; fileRef = C426D1811C062647006A6946 /* Icon-72.png */; };
+		C426D1971C062647006A6946 /* Icon-72@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C426D1821C062647006A6946 /* Icon-72@2x.png */; };
+		C426D1981C062647006A6946 /* Icon-Small-50.png in Resources */ = {isa = PBXBuildFile; fileRef = C426D1831C062647006A6946 /* Icon-Small-50.png */; };
+		C426D1991C062647006A6946 /* Icon-Small-50@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C426D1841C062647006A6946 /* Icon-Small-50@2x.png */; };
+		C426D19A1C062647006A6946 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = C426D1851C062647006A6946 /* Icon.png */; };
+		C426D19B1C062647006A6946 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C426D1861C062647006A6946 /* Icon@2x.png */; };
+		C426D19C1C062647006A6946 /* iTunesArtwork.png in Resources */ = {isa = PBXBuildFile; fileRef = C426D1871C062647006A6946 /* iTunesArtwork.png */; };
+		C426D19D1C062647006A6946 /* iTunesArtwork@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C426D1881C062647006A6946 /* iTunesArtwork@2x.png */; };
+		C426D19E1C062647006A6946 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = C426D1891C062647006A6946 /* README.md */; };
+		C426D1A01C065068006A6946 /* PlaylistTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C426D19F1C065068006A6946 /* PlaylistTableViewController.swift */; };
 		C427E6351BDEA1EC0007D34C /* Spotify.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C427E6341BDEA1EC0007D34C /* Spotify.framework */; };
+		C429F7431BFD1DD000F1975B /* CustomHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C429F7421BFD1DD000F1975B /* CustomHeaderCell.swift */; };
 		C444CDDF1BE024CE00601D1D /* FUZE.png in Resources */ = {isa = PBXBuildFile; fileRef = C444CDDE1BE024CE00601D1D /* FUZE.png */; };
 		C444CDE11BE1059400601D1D /* ContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C444CDE01BE1059400601D1D /* ContainerViewController.swift */; };
-		C444CDE31BE105B900601D1D /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C444CDE21BE105B900601D1D /* MenuViewController.swift */; };
-		C444CDE71BE110CB00601D1D /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C444CDE61BE110CB00601D1D /* SWRevealViewController.m */; };
+		C444CDE31BE105B900601D1D /* hello.swift in Sources */ = {isa = PBXBuildFile; fileRef = C444CDE21BE105B900601D1D /* hello.swift */; };
 		C444CDE91BE111E300601D1D /* TabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C444CDE81BE111E300601D1D /* TabViewController.swift */; };
 		C4B506E11BDE974C0096EC11 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4B506E01BDE974C0096EC11 /* AudioToolbox.framework */; };
 		C4C8455B1BDABB1E00C404A5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C8455A1BDABB1E00C404A5 /* AppDelegate.swift */; };
@@ -52,12 +79,38 @@
 /* Begin PBXFileReference section */
 		C40ECFE21BE29B7400E93BA0 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		C40ED05E1BE29DA700E93BA0 /* hello.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = hello.xcdatamodel; sourceTree = "<group>"; };
+		C426D1661C06175B006A6946 /* ENSideMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ENSideMenu.swift; sourceTree = "<group>"; };
+		C426D1671C06175B006A6946 /* ENSideMenuNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ENSideMenuNavigationController.swift; sourceTree = "<group>"; };
+		C426D16A1C0619A3006A6946 /* MyNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyNavigationController.swift; sourceTree = "<group>"; };
+		C426D16C1C061A4E006A6946 /* MyMenuTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyMenuTableViewController.swift; sourceTree = "<group>"; };
+		C426D16E1C061C04006A6946 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		C426D1751C062647006A6946 /* Contents.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Contents.json; sourceTree = "<group>"; };
+		C426D1761C062647006A6946 /* Icon-40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-40.png"; sourceTree = "<group>"; };
+		C426D1771C062647006A6946 /* Icon-40@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-40@2x.png"; sourceTree = "<group>"; };
+		C426D1781C062647006A6946 /* Icon-40@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-40@3x.png"; sourceTree = "<group>"; };
+		C426D1791C062647006A6946 /* Icon-60@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-60@2x.png"; sourceTree = "<group>"; };
+		C426D17A1C062647006A6946 /* Icon-60@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-60@3x.png"; sourceTree = "<group>"; };
+		C426D17B1C062647006A6946 /* Icon-76.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-76.png"; sourceTree = "<group>"; };
+		C426D17C1C062647006A6946 /* Icon-76@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-76@2x.png"; sourceTree = "<group>"; };
+		C426D17D1C062647006A6946 /* Icon-Small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small.png"; sourceTree = "<group>"; };
+		C426D17E1C062647006A6946 /* Icon-Small@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small@2x.png"; sourceTree = "<group>"; };
+		C426D17F1C062647006A6946 /* Icon-Small@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small@3x.png"; sourceTree = "<group>"; };
+		C426D1801C062647006A6946 /* Icon-60.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-60.png"; sourceTree = "<group>"; };
+		C426D1811C062647006A6946 /* Icon-72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72.png"; sourceTree = "<group>"; };
+		C426D1821C062647006A6946 /* Icon-72@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-72@2x.png"; sourceTree = "<group>"; };
+		C426D1831C062647006A6946 /* Icon-Small-50.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small-50.png"; sourceTree = "<group>"; };
+		C426D1841C062647006A6946 /* Icon-Small-50@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-Small-50@2x.png"; sourceTree = "<group>"; };
+		C426D1851C062647006A6946 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
+		C426D1861C062647006A6946 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
+		C426D1871C062647006A6946 /* iTunesArtwork.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iTunesArtwork.png; sourceTree = "<group>"; };
+		C426D1881C062647006A6946 /* iTunesArtwork@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@2x.png"; sourceTree = "<group>"; };
+		C426D1891C062647006A6946 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		C426D19F1C065068006A6946 /* PlaylistTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistTableViewController.swift; sourceTree = "<group>"; };
 		C427E6341BDEA1EC0007D34C /* Spotify.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Spotify.framework; sourceTree = "<group>"; };
+		C429F7421BFD1DD000F1975B /* CustomHeaderCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomHeaderCell.swift; sourceTree = "<group>"; };
 		C444CDDE1BE024CE00601D1D /* FUZE.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FUZE.png; sourceTree = "<group>"; };
 		C444CDE01BE1059400601D1D /* ContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContainerViewController.swift; sourceTree = "<group>"; };
-		C444CDE21BE105B900601D1D /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
-		C444CDE51BE110CB00601D1D /* SWRevealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWRevealViewController.h; sourceTree = "<group>"; };
-		C444CDE61BE110CB00601D1D /* SWRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWRevealViewController.m; sourceTree = "<group>"; };
+		C444CDE21BE105B900601D1D /* hello.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = hello.swift; sourceTree = "<group>"; };
 		C444CDE81BE111E300601D1D /* TabViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabViewController.swift; sourceTree = "<group>"; };
 		C4B506DF1BDE974C0096EC11 /* SoundFuze.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = SoundFuze.entitlements; sourceTree = "<group>"; };
 		C4B506E01BDE974C0096EC11 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -114,13 +167,51 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		C444CDE41BE110B000601D1D /* SWRevealViewController */ = {
+		C426D1701C061D4B006A6946 /* SideMenu */ = {
 			isa = PBXGroup;
 			children = (
-				C444CDE51BE110CB00601D1D /* SWRevealViewController.h */,
-				C444CDE61BE110CB00601D1D /* SWRevealViewController.m */,
+				C426D1661C06175B006A6946 /* ENSideMenu.swift */,
+				C426D1671C06175B006A6946 /* ENSideMenuNavigationController.swift */,
+				C426D16A1C0619A3006A6946 /* MyNavigationController.swift */,
+				C426D16C1C061A4E006A6946 /* MyMenuTableViewController.swift */,
 			);
-			name = SWRevealViewController;
+			name = SideMenu;
+			sourceTree = "<group>";
+		};
+		C426D1731C062647006A6946 /* ios */ = {
+			isa = PBXGroup;
+			children = (
+				C426D1741C062647006A6946 /* AppIcon.appiconset */,
+				C426D1801C062647006A6946 /* Icon-60.png */,
+				C426D1811C062647006A6946 /* Icon-72.png */,
+				C426D1821C062647006A6946 /* Icon-72@2x.png */,
+				C426D1831C062647006A6946 /* Icon-Small-50.png */,
+				C426D1841C062647006A6946 /* Icon-Small-50@2x.png */,
+				C426D1851C062647006A6946 /* Icon.png */,
+				C426D1861C062647006A6946 /* Icon@2x.png */,
+				C426D1871C062647006A6946 /* iTunesArtwork.png */,
+				C426D1881C062647006A6946 /* iTunesArtwork@2x.png */,
+				C426D1891C062647006A6946 /* README.md */,
+			);
+			path = ios;
+			sourceTree = "<group>";
+		};
+		C426D1741C062647006A6946 /* AppIcon.appiconset */ = {
+			isa = PBXGroup;
+			children = (
+				C426D1751C062647006A6946 /* Contents.json */,
+				C426D1761C062647006A6946 /* Icon-40.png */,
+				C426D1771C062647006A6946 /* Icon-40@2x.png */,
+				C426D1781C062647006A6946 /* Icon-40@3x.png */,
+				C426D1791C062647006A6946 /* Icon-60@2x.png */,
+				C426D17A1C062647006A6946 /* Icon-60@3x.png */,
+				C426D17B1C062647006A6946 /* Icon-76.png */,
+				C426D17C1C062647006A6946 /* Icon-76@2x.png */,
+				C426D17D1C062647006A6946 /* Icon-Small.png */,
+				C426D17E1C062647006A6946 /* Icon-Small@2x.png */,
+				C426D17F1C062647006A6946 /* Icon-Small@3x.png */,
+			);
+			path = AppIcon.appiconset;
 			sourceTree = "<group>";
 		};
 		C4C8454E1BDABB1E00C404A5 = {
@@ -152,21 +243,25 @@
 		C4C845591BDABB1E00C404A5 /* SoundFuze */ = {
 			isa = PBXGroup;
 			children = (
-				C444CDE41BE110B000601D1D /* SWRevealViewController */,
-				C4B506DF1BDE974C0096EC11 /* SoundFuze.entitlements */,
+				C426D1701C061D4B006A6946 /* SideMenu */,
 				C4C8455A1BDABB1E00C404A5 /* AppDelegate.swift */,
 				C4C8455C1BDABB1E00C404A5 /* FirstViewController.swift */,
 				C4C8455E1BDABB1E00C404A5 /* SecondViewController.swift */,
+				C429F7421BFD1DD000F1975B /* CustomHeaderCell.swift */,
 				C40ED05D1BE29DA700E93BA0 /* fuze.xcdatamodeld */,
 				C4C845601BDABB1E00C404A5 /* Main.storyboard */,
+				C426D19F1C065068006A6946 /* PlaylistTableViewController.swift */,
+				C426D16E1C061C04006A6946 /* ViewController.swift */,
 				C444CDE81BE111E300601D1D /* TabViewController.swift */,
-				C444CDE21BE105B900601D1D /* MenuViewController.swift */,
+				C444CDE21BE105B900601D1D /* hello.swift */,
 				C444CDE01BE1059400601D1D /* ContainerViewController.swift */,
 				C4E95FF41BE0060100417D26 /* HostViewController.swift */,
 				C4E95FF61BE0063F00417D26 /* SongServiceManager.swift */,
 				C4D7071D1BDEE6C800C2EA24 /* TrackTableViewCell.swift */,
 				C4C845E61BDAC5A700C404A5 /* LoginViewController.swift */,
 				C444CDDE1BE024CE00601D1D /* FUZE.png */,
+				C4B506DF1BDE974C0096EC11 /* SoundFuze.entitlements */,
+				C426D1731C062647006A6946 /* ios */,
 				C4C845631BDABB1E00C404A5 /* Assets.xcassets */,
 				C4C845651BDABB1E00C404A5 /* LaunchScreen.storyboard */,
 				C4C845681BDABB1E00C404A5 /* Info.plist */,
@@ -305,10 +400,30 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C426D1981C062647006A6946 /* Icon-Small-50.png in Resources */,
+				C426D18A1C062647006A6946 /* Contents.json in Resources */,
+				C426D1991C062647006A6946 /* Icon-Small-50@2x.png in Resources */,
 				C4C845671BDABB1E00C404A5 /* LaunchScreen.storyboard in Resources */,
+				C426D1971C062647006A6946 /* Icon-72@2x.png in Resources */,
+				C426D19B1C062647006A6946 /* Icon@2x.png in Resources */,
+				C426D18B1C062647006A6946 /* Icon-40.png in Resources */,
+				C426D1941C062647006A6946 /* Icon-Small@3x.png in Resources */,
+				C426D1921C062647006A6946 /* Icon-Small.png in Resources */,
+				C426D19C1C062647006A6946 /* iTunesArtwork.png in Resources */,
 				C444CDDF1BE024CE00601D1D /* FUZE.png in Resources */,
+				C426D18C1C062647006A6946 /* Icon-40@2x.png in Resources */,
+				C426D18E1C062647006A6946 /* Icon-60@2x.png in Resources */,
+				C426D1901C062647006A6946 /* Icon-76.png in Resources */,
+				C426D19A1C062647006A6946 /* Icon.png in Resources */,
+				C426D18F1C062647006A6946 /* Icon-60@3x.png in Resources */,
+				C426D1951C062647006A6946 /* Icon-60.png in Resources */,
 				C4C845641BDABB1E00C404A5 /* Assets.xcassets in Resources */,
+				C426D18D1C062647006A6946 /* Icon-40@3x.png in Resources */,
+				C426D19D1C062647006A6946 /* iTunesArtwork@2x.png in Resources */,
+				C426D1911C062647006A6946 /* Icon-76@2x.png in Resources */,
+				C426D1961C062647006A6946 /* Icon-72.png in Resources */,
 				C4C845621BDABB1E00C404A5 /* Main.storyboard in Resources */,
+				C426D1931C062647006A6946 /* Icon-Small@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -333,18 +448,25 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C426D16D1C061A4E006A6946 /* MyMenuTableViewController.swift in Sources */,
 				C4D7071E1BDEE6C800C2EA24 /* TrackTableViewCell.swift in Sources */,
+				C426D16B1C0619A3006A6946 /* MyNavigationController.swift in Sources */,
 				C4C845E71BDAC5A700C404A5 /* LoginViewController.swift in Sources */,
+				C426D1681C06175B006A6946 /* ENSideMenu.swift in Sources */,
+				C426D1691C06175B006A6946 /* ENSideMenuNavigationController.swift in Sources */,
 				C444CDE11BE1059400601D1D /* ContainerViewController.swift in Sources */,
 				C40ED05F1BE29DA700E93BA0 /* fuze.xcdatamodeld in Sources */,
 				C4E95FF51BE0060100417D26 /* HostViewController.swift in Sources */,
-				C444CDE31BE105B900601D1D /* MenuViewController.swift in Sources */,
+				C444CDE31BE105B900601D1D /* hello.swift in Sources */,
 				C4C8455F1BDABB1E00C404A5 /* SecondViewController.swift in Sources */,
 				C444CDE91BE111E300601D1D /* TabViewController.swift in Sources */,
+				C426D16F1C061C04006A6946 /* ViewController.swift in Sources */,
+				C426D19E1C062647006A6946 /* README.md in Sources */,
 				C4C8455B1BDABB1E00C404A5 /* AppDelegate.swift in Sources */,
-				C444CDE71BE110CB00601D1D /* SWRevealViewController.m in Sources */,
+				C426D1A01C065068006A6946 /* PlaylistTableViewController.swift in Sources */,
 				C4E95FF71BE0063F00417D26 /* SongServiceManager.swift in Sources */,
 				C4C8455D1BDABB1E00C404A5 /* FirstViewController.swift in Sources */,
+				C429F7431BFD1DD000F1975B /* CustomHeaderCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
