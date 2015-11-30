@@ -9,11 +9,11 @@
 /* Begin PBXBuildFile section */
 		C40ECFE31BE29B7400E93BA0 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C40ECFE21BE29B7400E93BA0 /* CoreData.framework */; };
 		C40ED05F1BE29DA700E93BA0 /* fuze.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C40ED05D1BE29DA700E93BA0 /* fuze.xcdatamodeld */; };
+		C41443861C08C67E008E6C12 /* TrackTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C41443851C08C67E008E6C12 /* TrackTableViewController.swift */; };
 		C426D1681C06175B006A6946 /* ENSideMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = C426D1661C06175B006A6946 /* ENSideMenu.swift */; };
 		C426D1691C06175B006A6946 /* ENSideMenuNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C426D1671C06175B006A6946 /* ENSideMenuNavigationController.swift */; };
 		C426D16B1C0619A3006A6946 /* MyNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C426D16A1C0619A3006A6946 /* MyNavigationController.swift */; };
 		C426D16D1C061A4E006A6946 /* MyMenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C426D16C1C061A4E006A6946 /* MyMenuTableViewController.swift */; };
-		C426D16F1C061C04006A6946 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C426D16E1C061C04006A6946 /* ViewController.swift */; };
 		C426D18A1C062647006A6946 /* Contents.json in Resources */ = {isa = PBXBuildFile; fileRef = C426D1751C062647006A6946 /* Contents.json */; };
 		C426D18B1C062647006A6946 /* Icon-40.png in Resources */ = {isa = PBXBuildFile; fileRef = C426D1761C062647006A6946 /* Icon-40.png */; };
 		C426D18C1C062647006A6946 /* Icon-40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C426D1771C062647006A6946 /* Icon-40@2x.png */; };
@@ -42,6 +42,7 @@
 		C444CDE11BE1059400601D1D /* ContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C444CDE01BE1059400601D1D /* ContainerViewController.swift */; };
 		C444CDE31BE105B900601D1D /* hello.swift in Sources */ = {isa = PBXBuildFile; fileRef = C444CDE21BE105B900601D1D /* hello.swift */; };
 		C444CDE91BE111E300601D1D /* TabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C444CDE81BE111E300601D1D /* TabViewController.swift */; };
+		C45D93FB1C08B3AB00874F4C /* YSSegmentedControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = C45D93FA1C08B3AB00874F4C /* YSSegmentedControl.swift */; };
 		C4B506E11BDE974C0096EC11 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4B506E01BDE974C0096EC11 /* AudioToolbox.framework */; };
 		C4C8455B1BDABB1E00C404A5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C8455A1BDABB1E00C404A5 /* AppDelegate.swift */; };
 		C4C8455D1BDABB1E00C404A5 /* FirstViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4C8455C1BDABB1E00C404A5 /* FirstViewController.swift */; };
@@ -79,11 +80,11 @@
 /* Begin PBXFileReference section */
 		C40ECFE21BE29B7400E93BA0 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		C40ED05E1BE29DA700E93BA0 /* hello.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = hello.xcdatamodel; sourceTree = "<group>"; };
+		C41443851C08C67E008E6C12 /* TrackTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackTableViewController.swift; sourceTree = "<group>"; };
 		C426D1661C06175B006A6946 /* ENSideMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ENSideMenu.swift; sourceTree = "<group>"; };
 		C426D1671C06175B006A6946 /* ENSideMenuNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ENSideMenuNavigationController.swift; sourceTree = "<group>"; };
 		C426D16A1C0619A3006A6946 /* MyNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyNavigationController.swift; sourceTree = "<group>"; };
 		C426D16C1C061A4E006A6946 /* MyMenuTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyMenuTableViewController.swift; sourceTree = "<group>"; };
-		C426D16E1C061C04006A6946 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		C426D1751C062647006A6946 /* Contents.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Contents.json; sourceTree = "<group>"; };
 		C426D1761C062647006A6946 /* Icon-40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-40.png"; sourceTree = "<group>"; };
 		C426D1771C062647006A6946 /* Icon-40@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-40@2x.png"; sourceTree = "<group>"; };
@@ -112,6 +113,7 @@
 		C444CDE01BE1059400601D1D /* ContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContainerViewController.swift; sourceTree = "<group>"; };
 		C444CDE21BE105B900601D1D /* hello.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = hello.swift; sourceTree = "<group>"; };
 		C444CDE81BE111E300601D1D /* TabViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabViewController.swift; sourceTree = "<group>"; };
+		C45D93FA1C08B3AB00874F4C /* YSSegmentedControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YSSegmentedControl.swift; sourceTree = "<group>"; };
 		C4B506DF1BDE974C0096EC11 /* SoundFuze.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = SoundFuze.entitlements; sourceTree = "<group>"; };
 		C4B506E01BDE974C0096EC11 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		C4C845571BDABB1E00C404A5 /* SoundFuze.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SoundFuze.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -251,7 +253,7 @@
 				C40ED05D1BE29DA700E93BA0 /* fuze.xcdatamodeld */,
 				C4C845601BDABB1E00C404A5 /* Main.storyboard */,
 				C426D19F1C065068006A6946 /* PlaylistTableViewController.swift */,
-				C426D16E1C061C04006A6946 /* ViewController.swift */,
+				C41443851C08C67E008E6C12 /* TrackTableViewController.swift */,
 				C444CDE81BE111E300601D1D /* TabViewController.swift */,
 				C444CDE21BE105B900601D1D /* hello.swift */,
 				C444CDE01BE1059400601D1D /* ContainerViewController.swift */,
@@ -259,6 +261,7 @@
 				C4E95FF61BE0063F00417D26 /* SongServiceManager.swift */,
 				C4D7071D1BDEE6C800C2EA24 /* TrackTableViewCell.swift */,
 				C4C845E61BDAC5A700C404A5 /* LoginViewController.swift */,
+				C45D93FA1C08B3AB00874F4C /* YSSegmentedControl.swift */,
 				C444CDDE1BE024CE00601D1D /* FUZE.png */,
 				C4B506DF1BDE974C0096EC11 /* SoundFuze.entitlements */,
 				C426D1731C062647006A6946 /* ios */,
@@ -448,6 +451,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C45D93FB1C08B3AB00874F4C /* YSSegmentedControl.swift in Sources */,
 				C426D16D1C061A4E006A6946 /* MyMenuTableViewController.swift in Sources */,
 				C4D7071E1BDEE6C800C2EA24 /* TrackTableViewCell.swift in Sources */,
 				C426D16B1C0619A3006A6946 /* MyNavigationController.swift in Sources */,
@@ -456,11 +460,11 @@
 				C426D1691C06175B006A6946 /* ENSideMenuNavigationController.swift in Sources */,
 				C444CDE11BE1059400601D1D /* ContainerViewController.swift in Sources */,
 				C40ED05F1BE29DA700E93BA0 /* fuze.xcdatamodeld in Sources */,
+				C41443861C08C67E008E6C12 /* TrackTableViewController.swift in Sources */,
 				C4E95FF51BE0060100417D26 /* HostViewController.swift in Sources */,
 				C444CDE31BE105B900601D1D /* hello.swift in Sources */,
 				C4C8455F1BDABB1E00C404A5 /* SecondViewController.swift in Sources */,
 				C444CDE91BE111E300601D1D /* TabViewController.swift in Sources */,
-				C426D16F1C061C04006A6946 /* ViewController.swift in Sources */,
 				C426D19E1C062647006A6946 /* README.md in Sources */,
 				C4C8455B1BDABB1E00C404A5 /* AppDelegate.swift in Sources */,
 				C426D1A01C065068006A6946 /* PlaylistTableViewController.swift in Sources */,

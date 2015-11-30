@@ -102,6 +102,7 @@
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="sda-sg-Ah7" firstAttribute="bottom" secondItem="4ug-Mw-9AY" secondAttribute="top" id="8fu-VC-IU0"/>
                             <constraint firstItem="sda-sg-Ah7" firstAttribute="leading" secondItem="tsR-hK-woN" secondAttribute="leading" id="XIj-nm-d44"/>
@@ -111,31 +112,7 @@
                     </view>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="ka3-ty-YoM">
-                        <leftBarButtonItems>
-                            <barButtonItem image="dot" id="BzO-4K-nKL">
-                                <connections>
-                                    <action selector="showMenu:" destination="9pv-A4-QxB" id="S6u-wh-YIk"/>
-                                </connections>
-                            </barButtonItem>
-                            <barButtonItem systemItem="reply" id="tkJ-zU-ijy">
-                                <connections>
-                                    <action selector="mostRecentQueue:" destination="9pv-A4-QxB" id="Nae-LA-kg7"/>
-                                </connections>
-                            </barButtonItem>
-                        </leftBarButtonItems>
-                        <rightBarButtonItems>
-                            <barButtonItem systemItem="organize" id="5SP-jY-A5n"/>
-                            <barButtonItem systemItem="trash" id="qAW-mQ-Dyl">
-                                <connections>
-                                    <action selector="clearQueue:" destination="9pv-A4-QxB" id="wRG-lJ-dqD"/>
-                                </connections>
-                            </barButtonItem>
-                            <barButtonItem systemItem="fastForward" id="aj7-FS-hyr">
-                                <connections>
-                                    <action selector="next:" destination="9pv-A4-QxB" id="esA-uI-E1V"/>
-                                </connections>
-                            </barButtonItem>
-                        </rightBarButtonItems>
+                        <barButtonItem key="leftBarButtonItem" image="dot" id="BzO-4K-nKL"/>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
@@ -168,7 +145,7 @@
                                     <outlet property="delegate" destination="8rJ-Kc-sve" id="F2S-TI-at0"/>
                                 </connections>
                             </searchBar>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="bEB-fb-e6f">
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="bEB-fb-e6f">
                                 <rect key="frame" x="0.0" y="63" width="600" height="29"/>
                                 <animations/>
                                 <segments>
@@ -176,6 +153,9 @@
                                     <segment title="Artist"/>
                                     <segment title="Album"/>
                                 </segments>
+                                <connections>
+                                    <action selector="indexChanged:" destination="8rJ-Kc-sve" eventType="valueChanged" id="lFV-N7-AeT"/>
+                                </connections>
                             </segmentedControl>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="79" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="akB-S3-gGa">
                                 <rect key="frame" x="0.0" y="92" width="600" height="459"/>
@@ -261,6 +241,7 @@
                     <connections>
                         <outlet property="searchBar" destination="bYx-Dg-jmH" id="tW8-1D-d2P"/>
                         <outlet property="searchTable" destination="akB-S3-gGa" id="kKP-2y-sFy"/>
+                        <outlet property="segmentedControl" destination="bEB-fb-e6f" id="b3y-uk-L37"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Nw-L8-lE0" sceneMemberID="firstResponder"/>
@@ -335,6 +316,40 @@
             </objects>
             <point key="canvasLocation" x="1560" y="1033"/>
         </scene>
+        <!--My Menu Table View Controller-->
+        <scene sceneID="JDc-rE-u8q">
+            <objects>
+                <tableViewController storyboardIdentifier="myMenu" id="hAX-vi-Og9" customClass="MyMenuTableViewController" customModule="SoundFuze" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="vcZ-JH-lBH">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <animations/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="Vto-Rl-97y">
+                                <rect key="frame" x="0.0" y="28" width="600" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Vto-Rl-97y" id="dis-R6-yLE">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <animations/>
+                                </tableViewCellContentView>
+                                <animations/>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="hAX-vi-Og9" id="ENK-Xc-zEB"/>
+                            <outlet property="delegate" destination="hAX-vi-Og9" id="8H0-iQ-Bz5"/>
+                        </connections>
+                    </tableView>
+                    <connections>
+                        <segue destination="ggf-5y-M11" kind="presentation" identifier="Logout" id="DSY-bK-dGf"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dsR-do-XaY" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2418" y="1105"/>
+        </scene>
         <!--LoginVC-->
         <scene sceneID="K4a-oK-GDH">
             <objects>
@@ -379,7 +394,7 @@
                             </imageView>
                         </subviews>
                         <animations/>
-                        <color key="backgroundColor" red="0.40392156862745099" green="0.011764705882352941" blue="0.65098039215686276" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" red="0.0039215686269999999" green="0.21176470589999999" blue="0.50980392159999999" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="mCe-rN-nFr" firstAttribute="top" secondItem="FlN-xm-3SY" secondAttribute="bottom" constant="75" id="13r-Cv-Nz1"/>
                             <constraint firstItem="3mN-5P-oRc" firstAttribute="centerX" secondItem="Zhg-kh-erw" secondAttribute="centerX" id="H4P-al-MzW"/>
@@ -430,9 +445,21 @@
                             </barButtonItem>
                         </leftBarButtonItems>
                         <rightBarButtonItems>
-                            <barButtonItem systemItem="fastForward" id="uBb-s5-foR"/>
-                            <barButtonItem systemItem="play" id="5Ep-PB-hHU"/>
-                            <barButtonItem systemItem="rewind" id="JFg-iW-Rcs"/>
+                            <barButtonItem systemItem="fastForward" id="uBb-s5-foR">
+                                <connections>
+                                    <action selector="playNext:" destination="49e-Tb-3d3" id="FZL-im-K1h"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem systemItem="play" id="5Ep-PB-hHU">
+                                <connections>
+                                    <action selector="playPause:" destination="49e-Tb-3d3" id="hrc-lk-IVF"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem systemItem="rewind" id="JFg-iW-Rcs">
+                                <connections>
+                                    <action selector="playPrevious:" destination="49e-Tb-3d3" id="FBV-6Y-qMY"/>
+                                </connections>
+                            </barButtonItem>
                         </rightBarButtonItems>
                     </navigationItem>
                     <nil key="simulatedBottomBarMetrics"/>
@@ -443,6 +470,9 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </tabBar>
                     <connections>
+                        <outlet property="playNext" destination="uBb-s5-foR" id="5JX-Dq-3bs"/>
+                        <outlet property="playPause" destination="5Ep-PB-hHU" id="t3q-QJ-z61"/>
+                        <outlet property="playPrevious" destination="JFg-iW-Rcs" id="vJE-en-BeE"/>
                         <segue destination="yOB-L4-7J1" kind="relationship" relationship="viewControllers" id="u7Y-xg-7CH"/>
                         <segue destination="Hg8-Em-Al3" kind="relationship" relationship="viewControllers" id="lzU-1b-eKA"/>
                         <segue destination="OU9-yM-GC8" kind="relationship" relationship="viewControllers" id="veh-pn-uwF"/>
@@ -526,6 +556,7 @@
                     <navigationItem key="navigationItem" title="Root View Controller" id="puc-V8-Ixo"/>
                     <connections>
                         <outlet property="tableView" destination="2S6-O1-1xx" id="q7w-9R-yFm"/>
+                        <segue destination="vSr-bF-h3m" kind="show" identifier="showTracks" id="C44-Ks-WFL"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="brg-hz-0kd" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -552,17 +583,17 @@
             </objects>
             <point key="canvasLocation" x="750" y="1035"/>
         </scene>
-        <!--Table View Controller-->
+        <!--Track Table View Controller-->
         <scene sceneID="0kr-Q9-gO4">
             <objects>
-                <tableViewController id="vSr-bF-h3m" sceneMemberID="viewController">
+                <tableViewController id="vSr-bF-h3m" customClass="TrackTableViewController" customModule="SoundFuze" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="HgF-MN-qVE">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="En3-CK-I8j">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="track" id="En3-CK-I8j">
                                 <rect key="frame" x="0.0" y="28" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="En3-CK-I8j" id="nHL-Mf-TJ4">
@@ -578,6 +609,10 @@
                             <outlet property="delegate" destination="vSr-bF-h3m" id="Mj9-On-vxM"/>
                         </connections>
                     </tableView>
+                    <connections>
+                        <outlet property="tableView" destination="HgF-MN-qVE" id="Wow-Kb-dpY"/>
+                        <outlet property="trackTable" destination="HgF-MN-qVE" id="AuQ-GC-41M"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Zwo-mN-FhR" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

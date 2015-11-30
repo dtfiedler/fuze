@@ -23,6 +23,7 @@ class LoginViewController: UIViewController, /*SPTAuthViewDelegate, */SPTAudioSt
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationController?.navigationBarHidden = true
        
         //NSNotificationCenter.defaultCenter().addObserver(self, selector: "updateAfterFirstlogin", name: "spotifyLoginSuccesfull", object: nil)
         // Do any additional setup after loading the view
@@ -32,19 +33,19 @@ class LoginViewController: UIViewController, /*SPTAuthViewDelegate, */SPTAudioSt
         if let sessionObj : AnyObject = NSUserDefaults.standardUserDefaults().objectForKey("SpotifySession") {
             
             let sessionDataObj : NSData = sessionObj as! NSData
-            let session = NSKeyedUnarchiver.unarchiveObjectWithData(sessionDataObj) as! SPTSession
+            self.session = NSKeyedUnarchiver.unarchiveObjectWithData(sessionDataObj) as! SPTSession
             
-            if !session.isValid() {
+            if !self.session!.isValid() {
                 
                 SPTAuth.defaultInstance().renewSession(session, callback: { (error : NSError!, newsession : SPTSession!) -> Void in
                     
                     if error == nil {
     
-                        let sessionData = NSKeyedArchiver.archivedDataWithRootObject(session)
+                        let sessionData = NSKeyedArchiver.archivedDataWithRootObject(self.session!)
                         userDefaults.setObject(sessionData, forKey: "SpotifySession")
                         userDefaults.synchronize()
                         self.session = newsession
-                        //self.updateAfterFirstLogin()
+                        self.updateAfterFirstLogin()
     
                 } else {
                     print("error refresh ing new spotify session")
@@ -52,12 +53,16 @@ class LoginViewController: UIViewController, /*SPTAuthViewDelegate, */SPTAudioSt
             })
             } else {
                 print("session valid")
-                //updateAfterFirstLogin()
+                self.updateAfterFirstLogin()
             }
         } else {
             print("here")
             
         }
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        self.navigationController?.navigationBarHidden = true
     }
     
     func updateAfterFirstLogin(){

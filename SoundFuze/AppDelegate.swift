@@ -32,12 +32,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         var navigationBarAppearace = UINavigationBar.appearance()
         let tabBarAppearence = UITabBar.appearance()
         
-        navigationBarAppearace.barTintColor = UIColor(red: 101/255, green: 3/255, blue: 166/255, alpha: 1.0)
+        navigationBarAppearace.barTintColor = UIColor(red: 1/255, green: 54/255, blue: 130/255, alpha: 1.0)
         navigationBarAppearace.tintColor = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 1)
         navigationBarAppearace.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
-        tabBarAppearence.barTintColor = UIColor(red: 101/255, green: 3/255, blue: 166/255, alpha: 1.0)
+        tabBarAppearence.barTintColor = UIColor(red: 1/255, green: 54/255, blue: 130/255, alpha: 1.0)
         tabBarAppearence.tintColor = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 1)
         UIApplication.sharedApplication().setStatusBarStyle(UIStatusBarStyle.LightContent, animated: true)
+        
+        
+        //test internet connection
+        let testConnection = NSURLRequest(URL: NSURL(string: "www.google.com")!)
+        if (NSURLConnection.canHandleRequest(testConnection)){
+            print("connection is good")
+        } else {
+            print ("cannot connect to server")
+        }
         
         return true
     }

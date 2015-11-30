@@ -39,7 +39,7 @@ class MyMenuTableViewController: UITableViewController {
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // Return the number of rows in the section.
-        return 4
+        return 5
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -107,11 +107,19 @@ class MyMenuTableViewController: UITableViewController {
         case 3:
             destViewController = mainStoryboard.instantiateViewControllerWithIdentifier("settings")
             break
+        case 4:
+            destViewController = mainStoryboard.instantiateViewControllerWithIdentifier("LoginVC")
+            
+            let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+            appDelegate.window?.rootViewController = destViewController
+            break
         default:
+            
             destViewController = mainStoryboard.instantiateViewControllerWithIdentifier("tabVC")
             break
         }
         sideMenuController()?.setContentViewController(destViewController)
+        sideMenuController()?.sideMenu?.hideSideMenu()
     }
     
 

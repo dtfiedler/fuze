@@ -10,12 +10,11 @@ import UIKit
 import AVFoundation
 import CoreData
 
-class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, UITableViewDataSource, UITableViewDelegate {
+class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate {
     
     var window: UIWindow?
     
     @IBOutlet weak var menuButton: UIBarButtonItem!
-    
     @IBOutlet weak var trackTable: UITableView!
     
     let kClientID = "db5f7f0e54ed4342b9de8cc08ddcc29b"
@@ -34,22 +33,35 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
     
     var queuedTracks: [SPTPartialTrack] = []
     var selected: TrackTableViewCell!
+    var selectedIndex: NSIndexPath?
     var position: NSTimeInterval?
     var next = 0
     var uris: [NSURL] = []
     var savedURIs = [NSManagedObject]()
+    var currentPlaybackPosition: NSTimeInterval?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.trackTable.delegate = self
         self.trackTable.dataSource = self
-        //self.loadPlaylist()
-       // NSNotificationCenter.defaultCenter().addObserver(self, selector: "updateAfterFirstlogin", name: "loginSuccesfull", object: nil)
+
+        
+        let longPress = UILongPressGestureRecognizer(target: self, action: "longPressGestureRecognized:")
+        longPress.delegate = self
+        longPress.minimumPressDuration = 1.0
+        self.trackTable.addGestureRecognizer(longPress)
+        
+        let shortPress = UITapGestureRecognizer(target: self, action: "shortPressGestureRecognized:")
+        shortPress.delegate = self
+        self.trackTable.addGestureRecognizer(shortPress)
+
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "add:", name: "addToQueue", object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "addOthers:", name: "addOthersToQueue", object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "loadPlaylist:", name: "loadPlaylist", object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "saveQueue", name: "saveQueue", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "playPause", name: "playPause", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "playNext", name: "playNext", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self , selector: "playPrevious", name: "playPrevious", object: nil)
         
         // Do any additional setup after loading the view
         
@@ -58,9 +70,9 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         if let sessionObj : AnyObject = NSUserDefaults.standardUserDefaults().objectForKey("SpotifySession") {
             
             let sessionDataObj : NSData = sessionObj as! NSData
-            let session = NSKeyedUnarchiver.unarchiveObjectWithData(sessionDataObj) as! SPTSession
+            self.session = NSKeyedUnarchiver.unarchiveObjectWithData(sessionDataObj) as! SPTSession
             
-            if !session.isValid() {
+            if !self.session!.isValid() {
                 
                 //withServiceEndpointAtURL: NSURL(string: kTokenRefreshURL),
                 
@@ -68,7 +80,7 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
                     
                     if error == nil {
                         
-                        let sessionData = NSKeyedArchiver.archivedDataWithRootObject(session)
+                        let sessionData = NSKeyedArchiver.archivedDataWithRootObject(self.session!)
                         userDefaults.setObject(sessionData, forKey: "SpotifySession")
                         userDefaults.synchronize()
                         self.session = newsession
@@ -79,20 +91,18 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
                 
             } else {
                 print("session valid")
-
+                
             }
     }
+        loadStoredPlaylist()
+        
     }
     
-//    func load(){
-//        self.loadPlaylist()
-//    }
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
     
-    func loadPlaylist(notification: NSNotification) {
-        let userInfo: Dictionary <String,AnyObject!> = notification.userInfo as! Dictionary<String,
-            AnyObject!>
-        let playlist = userInfo["playlist"] as! String
-        
+    func loadStoredPlaylist(){
         //1
         let appDelegate =
         UIApplication.sharedApplication().delegate as! AppDelegate
@@ -100,26 +110,34 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         let managedContext = appDelegate.managedObjectContext
         
         //2
-        let fetchRequest = NSFetchRequest(entityName: "SongURIs")
+        let fetchRequest = NSFetchRequest(entityName: "Load")
+        let userDefaults = NSUserDefaults.standardUserDefaults()
         
         //3
         do {
             print("fetching...")
             let results =
             try managedContext.executeFetchRequest(fetchRequest)
-            savedURIs = results as! [NSManagedObject]
-            loadTracks(session!, playlist: playlist)
+            
+            if (!results.isEmpty){
+                savedURIs = results as! [NSManagedObject]
+                loadTracks(session)
+            }
         } catch let error as NSError {
             print("Could not fetch \(error), \(error.userInfo)")
         }
     }
     
-    func loadTracks(session: SPTSession!, playlist: String){
-
+    
+    func loadTracks(session: SPTSession!){
+        print("loading tracks...")
+    
+        self.queuedTracks.removeAll()
+        self.uris.removeAll()
+        self.trackTable.reloadData()
         
         for trackURI in savedURIs {
-    
-        if ((trackURI.valueForKey("name") as! NSString).lowercaseString == playlist.lowercaseString){
+            
         SPTRequest.requestItemAtURI(NSURL(string: trackURI.valueForKey("uri") as! String), withSession: session, callback: {(error: NSError!, trackObj: AnyObject?) -> Void in
             if (error != nil){
                 print("track lookup got error: \(error)")
@@ -127,13 +145,14 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
             }
             
             let track = trackObj as! SPTTrack
-            self.queuedTracks.append(track as! SPTPartialTrack)
+            self.queuedTracks.append(track as SPTPartialTrack)
             self.uris.append(track.uri)
             self.trackTable.reloadData()
            })
-           self.player?.queueURIs(self.uris, clearQueue: true, callback: nil)
         }
-        }
+    
+        self.player?.queueURIs(self.uris, clearQueue: true, callback: nil)
+    
     }
     
     @IBAction func clearQueue(sender: AnyObject) {
@@ -143,8 +162,7 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
     }
     
     @IBAction func mostRecentQueue(sender: AnyObject) {
-//        self.loadPlaylist()
-//        self.loadTracks(session)
+        
     }
     
     func playUsingSession(session: SPTSession!, trackIndex: Int){
@@ -174,11 +192,11 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         
         let cell = tableView.dequeueReusableCellWithIdentifier("track", forIndexPath: indexPath) as! TrackTableViewCell
         if (indexPath.row < queuedTracks.count){
-        cell.trackName.text = queuedTracks[indexPath.row].name
-        let artistInfo = queuedTracks[indexPath.row].artists.first!.name
-        cell.artist.text = artistInfo
+            cell.trackName.text = queuedTracks[indexPath.row].name
+            let artistInfo = queuedTracks[indexPath.row].artists.first!.name
+            cell.artist.text = artistInfo
             
-        let trackURI = queuedTracks[indexPath.row].playableUri
+            let trackURI = queuedTracks[indexPath.row].playableUri
         
         SPTRequest.requestItemAtURI(trackURI, withSession: session, callback: {(error: NSError!, trackObj: AnyObject?) -> Void in
                 if (error != nil){
@@ -212,6 +230,7 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
         for (var i = 0; i < queuedTracks.count; i++){
             let indexPath = NSIndexPath(forRow: i, inSection: 0)
             self.trackTable.cellForRowAtIndexPath(indexPath)?.backgroundColor = UIColor.clearColor()
@@ -263,6 +282,7 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
                 }
             }
             selected = cell
+            selectedIndex = indexPath
             timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: Selector("updateProgress"), userInfo: ["cell": cell], repeats: true)
         } else {
             player?.stop({(error: NSError!) -> Void in
@@ -290,7 +310,7 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         if (editingStyle == UITableViewCellEditingStyle.Delete) {
             self.queuedTracks.removeAtIndex(indexPath.row)
             self.uris.removeAtIndex(indexPath.row)
-            self.trackTable.reloadData()
+            self.trackTable.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
         }
     }
 
@@ -362,16 +382,15 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         return newTrack
         
     }
-    
-    deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
-    }
 
     //save current queue as a playlist in CoreData
     func saveQueue() {
         
-        
         let alertController = UIAlertController(title: "Playlist name", message: "What would you like the name of your playlist to be?", preferredStyle: .Alert)
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Default, handler: {(action: UIAlertAction!) in
+            self.dismissViewControllerAnimated(true, completion: nil)
+        })
         
         let defaultAction = UIAlertAction(title: "Save", style: .Default, handler:{ (action: UIAlertAction!) in
             
@@ -381,14 +400,13 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
             //2
             let entity =  NSEntityDescription.entityForName("SongURIs", inManagedObjectContext:managedContext)
             let song = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedContext)
-    
-            for trackURI in self.uris {
-                song.setValue(trackURI.description, forKey: "uri")
-            }
-            
             let text = alertController.textFields![0].text as String!
             
-            song.setValue(text, forKey: "name")
+            for trackURI in self.uris {
+                song.setValue(trackURI.description, forKey: "uri")
+                song.setValue(text, forKey: "name")
+            }
+            
             
             do {
                 try managedContext.save()
@@ -398,6 +416,7 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
             
         })
         
+        alertController.addAction(cancelAction)
         alertController.addAction(defaultAction)
         
         alertController.addTextFieldWithConfigurationHandler({(textField: UITextField!) in
@@ -407,16 +426,64 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         self.presentViewController(alertController, animated: true, completion: nil)
     }
     
-    @IBAction func next(sender: AnyObject) {
-         player?.skipNext(nil)
+    func playPause(){
+        if ((self.player?.isPlaying) == true) {
+            currentPlaybackPosition = player?.currentPlaybackPosition
+            player?.stop(nil)
+        } else {
+            
+        }
     }
     
-    func playNext(sender:AnyObject){
+    func playNext(){
         player?.skipNext(nil)
+        
     }
     
-    @IBAction func showMenu(sender: AnyObject) {
-        NSNotificationCenter.defaultCenter().postNotificationName("toggleMenu", object: nil)
+    func playPrevious(){
+        player?.skipPrevious(nil)
+    }
+    
+    func longPressGestureRecognized(gestureRecognizer: UIGestureRecognizer) {
+        self.trackTable.editing = true
+        
+    }
+    
+    func shortPressGestureRecognized(gestureRecognizer: UIGestureRecognizer) {
+        if (self.trackTable.editing == true){
+            self.trackTable.editing = false
+        }
+        self.trackTable.resignFirstResponder()
+    }
+    
+    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
+        
+        if (gestureRecognizer.isKindOfClass(UITapGestureRecognizer)){
+            if self.trackTable.editing == true {
+                return true
+            } else {
+                return false
+            }
+        }
+        return true
+    }
+    
+    func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
+    
+   func tableView(tableView: UITableView, moveRowAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
+            // remove the dragged row's model
+            let val = self.queuedTracks.removeAtIndex(sourceIndexPath.row)
+            let other = self.uris.removeAtIndex(sourceIndexPath.row)
+            
+            // insert it into the new position
+            self.queuedTracks.insert(val, atIndex: destinationIndexPath.row)
+            self.uris.insert(other, atIndex: destinationIndexPath.row)
+    }
+    
+    func audioStreaming(audioStreaming: SPTAudioStreamingController!, didStopPlayingTrack trackUri: NSURL!) {
+        self.trackTable.selectRowAtIndexPath(selectedIndex, animated: true, scrollPosition: .Middle )
     }
     
     func audioStreaming(audioStreaming: SPTAudioStreamingController!, didChangeToTrack trackMetadata: [NSObject : AnyObject]!) {

@@ -127,8 +127,10 @@ extension HostViewController : SongServiceManagerDelegate {
     }
     
     func addToQueue(manager: SongServiceManager, track: String) {
-            
             NSNotificationCenter.defaultCenter().postNotificationName("addOthersToQueue", object: nil, userInfo: ["track": track])
+            let alertController = UIAlertController(title: "Track added", message: "A track has been added by another user", preferredStyle: .Alert)
+        
+        
     }
     
     func refreshConnection(manager: SongServiceManager){
