@@ -59,6 +59,7 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "add:", name: "addToQueue", object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "addOthers:", name: "addOthersToQueue", object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "saveQueue", name: "saveQueue", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "load:", name: "loadPlaylist", object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "playPause", name: "playPause", object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "playNext", name: "playNext", object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self , selector: "playPrevious", name: "playPrevious", object: nil)
@@ -93,13 +94,20 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
                 print("session valid")
                 
             }
-    }
-        loadStoredPlaylist()
+        }
         
     }
     
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        //saveRecent()
+    }
+    
+    func load(notification: NSNotification){
+        loadStoredPlaylist()
     }
     
     func loadStoredPlaylist(){
@@ -112,6 +120,7 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         //2
         let fetchRequest = NSFetchRequest(entityName: "Load")
         let userDefaults = NSUserDefaults.standardUserDefaults()
+
         
         //3
         do {
@@ -137,7 +146,7 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         self.trackTable.reloadData()
         
         for trackURI in savedURIs {
-            
+        //if (trackURI.valueForKey("name")!.lowercaseString == "recent"){
         SPTRequest.requestItemAtURI(NSURL(string: trackURI.valueForKey("uri") as! String), withSession: session, callback: {(error: NSError!, trackObj: AnyObject?) -> Void in
             if (error != nil){
                 print("track lookup got error: \(error)")
@@ -150,6 +159,7 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
             self.trackTable.reloadData()
            })
         }
+       // }
     
         self.player?.queueURIs(self.uris, clearQueue: true, callback: nil)
     
@@ -226,19 +236,29 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         let duration = self.player?.currentTrackDuration
         let min = floor(currentProgress!);
         let current = min/duration!
+        if (ceil(currentProgress!) > (duration! - 1.0)){
+            self.trackTable.deselectRowAtIndexPath(selectedIndex!, animated: true)
+            self.trackTable.selectRowAtIndexPath(NSIndexPath(forRow: selectedIndex!.row + 1, inSection: (selectedIndex?.section)!), animated: true, scrollPosition: .Middle)
+            self.tableView(trackTable, didSelectRowAtIndexPath: NSIndexPath(forRow: selectedIndex!.row + 1, inSection: (selectedIndex?.section)!))
+        }
         cell.progress.setProgress(Float(current), animated: true)
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
+        let cell = tableView.cellForRowAtIndexPath(indexPath) as! TrackTableViewCell
+        
         for (var i = 0; i < queuedTracks.count; i++){
             let indexPath = NSIndexPath(forRow: i, inSection: 0)
             self.trackTable.cellForRowAtIndexPath(indexPath)?.backgroundColor = UIColor.clearColor()
+            let deselect = self.trackTable.cellForRowAtIndexPath((indexPath)) as! TrackTableViewCell
+            deselect.progress.hidden = true
         }
         
-        let cell = tableView.cellForRowAtIndexPath(indexPath) as! TrackTableViewCell
         
-        if (selected == nil || cell != selected){
+        cell.progress.hidden = false
+        
+        if ((selected == nil || cell != selected)){
         
             cell.backgroundColor = UIColor.lightGrayColor()
             
@@ -276,8 +296,9 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
                     })
                 } else {
                     //otherwise, no need to refresh old session, play song
+                    
                     playUsingSession(session, trackIndex: indexPath.row)
-                    self.next = indexPath.row + 1
+
                     self.trackTable.reloadData()
                 }
             }
@@ -364,9 +385,30 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
             //add to end of queue
             self.uris.append(trackURI!)
         }
-        
+        self.player?.queueURIs(self.uris, clearQueue: true, callback: nil)
         self.trackTable.reloadData()
         
+    }
+    
+    func saveRecent(){
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let managedContext = appDelegate.managedObjectContext
+        
+        //2
+        let entity =  NSEntityDescription.entityForName("Load", inManagedObjectContext:managedContext)
+        let song = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedContext)
+        
+        for trackURI in self.uris {
+            song.setValue(trackURI.description, forKey: "uri")
+        }
+        
+        
+        do {
+            try managedContext.save()
+        } catch let error as NSError  {
+            print("Could not save \(error), \(error.userInfo)")
+        }
+
     }
     
     func request(trackURI: NSURL!)-> SPTPartialTrack{
@@ -399,14 +441,15 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
             
             //2
             let entity =  NSEntityDescription.entityForName("SongURIs", inManagedObjectContext:managedContext)
-            let song = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedContext)
+           
             let text = alertController.textFields![0].text as String!
             
             for trackURI in self.uris {
+                var song = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedContext)
                 song.setValue(trackURI.description, forKey: "uri")
                 song.setValue(text, forKey: "name")
-            }
             
+            }
             
             do {
                 try managedContext.save()

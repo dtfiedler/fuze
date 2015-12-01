@@ -61,7 +61,7 @@ class LoginViewController: UIViewController, /*SPTAuthViewDelegate, */SPTAudioSt
         }
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewWillAppear(animated: Bool) {
         self.navigationController?.navigationBarHidden = true
     }
     
@@ -72,7 +72,6 @@ class LoginViewController: UIViewController, /*SPTAuthViewDelegate, */SPTAudioSt
         appDelegate.window?.rootViewController = containerVC
     }
     
-
         // Dispose of any resources that can be recreated.
         
     @IBAction func loginWithSpotify(sender: AnyObject) {

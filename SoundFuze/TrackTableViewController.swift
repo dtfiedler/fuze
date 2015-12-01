@@ -125,9 +125,12 @@ class TrackTableViewController: UITableViewController {
             
             //2
             let entity =  NSEntityDescription.entityForName("Load", inManagedObjectContext:managedContext)
-            let song = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedContext)
+            
+            //need to delete all previous values in Load entity
+            self.removePreviousLoadedPlaylists()
             
             for trackURI in self.tracks {
+                var song = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedContext)
                 song.setValue(trackURI.uri.description, forKey: "uri")
             }
             
@@ -140,7 +143,10 @@ class TrackTableViewController: UITableViewController {
             
             let mainStoryboard: UIStoryboard = UIStoryboard(name: "Main",bundle: nil)
             var destViewController : UIViewController
-            destViewController = mainStoryboard.instantiateViewControllerWithIdentifier("tabVC")
+            destViewController = mainStoryboard.instantiateViewControllerWithIdentifier("navController")
+            self.presentViewController(destViewController, animated: true, completion: {() in
+                NSNotificationCenter.defaultCenter().postNotificationName("loadPlaylist", object: nil)
+            })
             
         })
         
@@ -154,6 +160,32 @@ class TrackTableViewController: UITableViewController {
         self.presentViewController(alertController, animated: true, completion: nil)
         
         print("send to queue")
+        
+        
+    }
+    
+    func removePreviousLoadedPlaylists(){
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        
+        let managedContext = appDelegate.managedObjectContext
+        
+        //2
+        let fetchRequest = NSFetchRequest(entityName: "Load")
+        if #available(iOS 9.0, *) {
+            let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+            do {
+                
+                try managedContext.executeRequest(deleteRequest)
+                //try myPersistentStoreCoordinator.executeRequest(deleteRequest, withContext: myContext)
+                    
+                   // managedContext.executeRequest(deleteRequest, withContext: managedContext)
+            } catch let error as NSError {
+                // TODO: handle the error
+            }
+
+        } else {
+            // Fallback on earlier versions
+        }
         
         
     }

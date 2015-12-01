@@ -44,8 +44,8 @@ class PlaylistTableViewController: UITableViewController, ENSideMenuDelegate {
             print("fetching...")
             let results = try managedContext.executeFetchRequest(fetchRequest)
             playlists = results as! [NSManagedObject]
-            for lists in playlists {
-                if ((lists.valueForKey("name") as! NSString).lowercaseString != "nil"){
+                for lists in playlists {
+                if ((lists.valueForKey("name") as? NSString)!.lowercaseString != "nil") && !self.allPlaylists.contains(lists.valueForKey("name") as! String){
                     self.allPlaylists.append(lists.valueForKey("name") as! String)
                 }
             }
