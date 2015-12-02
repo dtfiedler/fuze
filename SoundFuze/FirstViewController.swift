@@ -96,14 +96,20 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
             }
         }
         
+        
+        
     }
     
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
+    override func viewWillAppear(animated: Bool) {
+        loadRecent()
+    }
     override func viewWillDisappear(animated: Bool) {
-        //saveRecent()
+        removePreviousLoadedPlaylists()
+        saveRecent()
     }
     
     func load(notification: NSNotification){
@@ -137,6 +143,31 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         }
     }
     
+    func loadRecent(){
+        //1
+        let appDelegate =
+        UIApplication.sharedApplication().delegate as! AppDelegate
+        
+        let managedContext = appDelegate.managedObjectContext
+        
+        //2
+        let fetchRequest = NSFetchRequest(entityName: "Recent")
+        let userDefaults = NSUserDefaults.standardUserDefaults()
+        
+        //3
+        do {
+            print("fetching...")
+            let results =
+            try managedContext.executeFetchRequest(fetchRequest)
+            
+            if (!results.isEmpty){
+                savedURIs = results as! [NSManagedObject]
+                loadTracks(session)
+            }
+        } catch let error as NSError {
+            print("Could not fetch \(error), \(error.userInfo)")
+        }
+    }
     
     func loadTracks(session: SPTSession!){
         print("loading tracks...")
@@ -176,11 +207,12 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
     }
     
     func playUsingSession(session: SPTSession!, trackIndex: Int){
+        
         if (player == nil){
             player = SPTAudioStreamingController(clientId: kClientID)
         }
 
-        player?.loginWithSession(session, callback: {(error: NSError!) -> Void in
+        player?.loginWithSession(self.session, callback: {(error: NSError!) -> Void in
             if error != nil {
                 print("Playback error: \(error.description)")
                 return
@@ -395,10 +427,10 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         let managedContext = appDelegate.managedObjectContext
         
         //2
-        let entity =  NSEntityDescription.entityForName("Load", inManagedObjectContext:managedContext)
-        let song = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedContext)
+        let entity =  NSEntityDescription.entityForName("Recent", inManagedObjectContext:managedContext)
         
         for trackURI in self.uris {
+            let song = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedContext)
             song.setValue(trackURI.description, forKey: "uri")
         }
         
@@ -525,20 +557,30 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
             self.uris.insert(other, atIndex: destinationIndexPath.row)
     }
     
-    func audioStreaming(audioStreaming: SPTAudioStreamingController!, didStopPlayingTrack trackUri: NSURL!) {
-        self.trackTable.selectRowAtIndexPath(selectedIndex, animated: true, scrollPosition: .Middle )
-    }
     
-    func audioStreaming(audioStreaming: SPTAudioStreamingController!, didChangeToTrack trackMetadata: [NSObject : AnyObject]!) {
-        let uri = trackMetadata[SPTAudioStreamingMetadataTrackURI] as! NSURL
-        for i in 0...uris.count {
-            if uri == uris[i]{
-                let indexPath = NSIndexPath(forRow: i, inSection: 0)
-                trackTable.selectRowAtIndexPath(indexPath, animated: true, scrollPosition: UITableViewScrollPosition.Middle)
+    func removePreviousLoadedPlaylists(){
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        
+        let managedContext = appDelegate.managedObjectContext
+        
+        //2
+        let fetchRequest = NSFetchRequest(entityName: "Recent")
+        if #available(iOS 9.0, *) {
+            let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+            do {
+                
+                try managedContext.executeRequest(deleteRequest)
+                //try myPersistentStoreCoordinator.executeRequest(deleteRequest, withContext: myContext)
+                
+                // managedContext.executeRequest(deleteRequest, withContext: managedContext)
+            } catch let error as NSError {
+                // TODO: handle the error
             }
             
-            
+        } else {
+            // Fallback on earlier versions
         }
+        
         
     }
     

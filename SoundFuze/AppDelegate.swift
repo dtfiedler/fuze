@@ -101,8 +101,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     
-    
-    
     // MARK: - Core Data stack
     
     lazy var applicationDocumentsDirectory: NSURL = {
