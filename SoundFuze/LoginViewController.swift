@@ -24,8 +24,9 @@ class LoginViewController: UIViewController, /*SPTAuthViewDelegate, */SPTAudioSt
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBarHidden = true
+        
        
-        //NSNotificationCenter.defaultCenter().addObserver(self, selector: "updateAfterFirstlogin", name: "spotifyLoginSuccesfull", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "loginWithSpotify", name: "spotifyLogin", object: nil)
         // Do any additional setup after loading the view
         
         let userDefaults = NSUserDefaults.standardUserDefaults()
@@ -53,6 +54,13 @@ class LoginViewController: UIViewController, /*SPTAuthViewDelegate, */SPTAudioSt
             })
             } else {
                 print("session valid")
+                let sessionObj : AnyObject = NSUserDefaults.standardUserDefaults().objectForKey("SpotifySession")! 
+                let sessionDataObj : NSData = sessionObj as! NSData
+                
+                self.session = NSKeyedUnarchiver.unarchiveObjectWithData(sessionDataObj) as! SPTSession
+                let sessionData = NSKeyedArchiver.archivedDataWithRootObject(self.session!)
+                userDefaults.setObject(sessionData, forKey: "SpotifySession")
+                userDefaults.synchronize()
                 self.updateAfterFirstLogin()
             }
         } else {
@@ -86,6 +94,41 @@ class LoginViewController: UIViewController, /*SPTAuthViewDelegate, */SPTAudioSt
         //et loginURL = spotifyAuth.loginURLForClientId(kClientID, declaredRedirectURL: NSURL(string: kCallbackURL), scopes: [SPTAuthStreamingScope])
         
         UIApplication.sharedApplication().openURL(loginURL)
+        
+    }
+    
+    func renewSession(){
+        
+        let userDefaults = NSUserDefaults.standardUserDefaults()
+        
+        if let sessionObj : AnyObject = NSUserDefaults.standardUserDefaults().objectForKey("SpotifySession") {
+            
+            let sessionDataObj : NSData = sessionObj as! NSData
+            self.session = NSKeyedUnarchiver.unarchiveObjectWithData(sessionDataObj) as! SPTSession
+            
+            if !self.session!.isValid() {
+                
+
+                
+                SPTAuth.defaultInstance().renewSession(self.session,  callback: { (error : NSError!, newsession : SPTSession!) -> Void in
+                    
+                    if error == nil {
+                        
+                        let sessionData = NSKeyedArchiver.archivedDataWithRootObject(self.session!)
+                        userDefaults.setObject(sessionData, forKey: "SpotifySession")
+                        userDefaults.synchronize()
+                        self.session = newsession
+                    } else {
+                        print("error refreshing new spotify session")
+                    }
+                })
+                
+            } else {
+                print("session valid")
+                
+            }
+        }
+
         
     }
 

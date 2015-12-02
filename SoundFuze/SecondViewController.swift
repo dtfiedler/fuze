@@ -38,7 +38,7 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
             
             if !self.session!.isValid() {
                 
-                SPTAuth.defaultInstance().renewSession(session,  callback: { (error : NSError!, newsession : SPTSession!) -> Void in
+                SPTAuth.defaultInstance().renewSession(self.session,  callback: { (error : NSError!, newsession : SPTSession!) -> Void in
                     
                     if error == nil {
                         

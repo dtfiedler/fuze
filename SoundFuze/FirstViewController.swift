@@ -77,7 +77,7 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
                 
                 //withServiceEndpointAtURL: NSURL(string: kTokenRefreshURL),
                 
-                SPTAuth.defaultInstance().renewSession(session,  callback: { (error : NSError!, newsession : SPTSession!) -> Void in
+                SPTAuth.defaultInstance().renewSession(self.session,  callback: { (error : NSError!, newsession : SPTSession!) -> Void in
                     
                     if error == nil {
                         
@@ -212,7 +212,7 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
             player = SPTAudioStreamingController(clientId: kClientID)
         }
 
-        player?.loginWithSession(self.session, callback: {(error: NSError!) -> Void in
+        player?.loginWithSession(session, callback: {(error: NSError!) -> Void in
             if error != nil {
                 print("Playback error: \(error.description)")
                 return
