@@ -31,9 +31,18 @@ class SongServiceManager : NSObject {
         self.serviceBrowser = MCNearbyServiceBrowser(peer: myPeerId, serviceType: SongServiceType)
         super.init()
         self.serviceAdvertiser.delegate = self
-        self.serviceAdvertiser.startAdvertisingPeer()
         self.serviceBrowser.delegate = self
+  
+    }
+    
+    func start(){
+        self.serviceAdvertiser.startAdvertisingPeer()
         self.serviceBrowser.startBrowsingForPeers()
+    }
+    
+    func stop (){
+        self.serviceAdvertiser.stopAdvertisingPeer()
+        self.serviceBrowser.stopBrowsingForPeers()
     }
     
     deinit {

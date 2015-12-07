@@ -38,7 +38,7 @@ class LoginViewController: UIViewController, /*SPTAuthViewDelegate, */SPTAudioSt
             
             if !self.session!.isValid() {
                 
-                SPTAuth.defaultInstance().renewSession(session, callback: { (error : NSError!, newsession : SPTSession!) -> Void in
+                SPTAuth.defaultInstance().renewSession(self.session, callback: { (error : NSError!, newsession : SPTSession!) -> Void in
                     
                     if error == nil {
     
@@ -46,7 +46,7 @@ class LoginViewController: UIViewController, /*SPTAuthViewDelegate, */SPTAudioSt
                         userDefaults.setObject(sessionData, forKey: "SpotifySession")
                         userDefaults.synchronize()
                         self.session = newsession
-                        self.updateAfterFirstLogin()
+                        //self.updateAfterFirstLogin()
     
                 } else {
                     print("error refresh ing new spotify session")
@@ -61,7 +61,7 @@ class LoginViewController: UIViewController, /*SPTAuthViewDelegate, */SPTAudioSt
                 let sessionData = NSKeyedArchiver.archivedDataWithRootObject(self.session!)
                 userDefaults.setObject(sessionData, forKey: "SpotifySession")
                 userDefaults.synchronize()
-                self.updateAfterFirstLogin()
+                //self.updateAfterFirstLogin()
             }
         } else {
             print("here")

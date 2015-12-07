@@ -39,15 +39,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         tabBarAppearence.tintColor = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 1)
         UIApplication.sharedApplication().setStatusBarStyle(UIStatusBarStyle.LightContent, animated: true)
         
-        
-        //test internet connection
-        let testConnection = NSURLRequest(URL: NSURL(string: "www.google.com")!)
-        if (NSURLConnection.canHandleRequest(testConnection)){
-            print("connection is good")
-        } else {
-            print ("cannot connect to server")
-        }
-        
         return true
     }
 

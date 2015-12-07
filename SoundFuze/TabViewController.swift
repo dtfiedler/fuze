@@ -21,11 +21,14 @@ class TabViewController: UITabBarController, ENSideMenuDelegate {
         super.viewDidLoad()
         self.sideMenuController()?.sideMenu?.delegate = self
         
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "makePause", name: "makePause", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "makePlay", name: "makePlay", object:nil)
+        
         playPrevious = UIBarButtonItem(barButtonSystemItem: .Rewind , target: self, action: "playPrevious:")
         playNext = UIBarButtonItem(barButtonSystemItem: .FastForward, target: self, action: "playNext:")
-        playPause = UIBarButtonItem(barButtonSystemItem: .Play, target: self, action: "playPause:")
+        playPause = UIBarButtonItem(barButtonSystemItem: .Play, target: self, action: nil)
         
-        self.navigationController?.navigationItem.setRightBarButtonItems([playPrevious!, playPause!, playNext!], animated: false)
+        self.navigationItem.rightBarButtonItems = [playNext!, playPause!, playPrevious!]
     }
     
     override func didReceiveMemoryWarning() {
@@ -42,26 +45,23 @@ class TabViewController: UITabBarController, ENSideMenuDelegate {
         NSNotificationCenter.defaultCenter().postNotificationName("saveQueue", object: nil)
     }
     
-    @IBAction func playPause(sender: AnyObject) {
-        if (!play){
-            NSNotificationCenter.defaultCenter().postNotificationName("play", object: nil)
-            let playButton = UIBarButtonItem(barButtonSystemItem: .Play, target: self, action: "playPause:") as UIBarButtonItem
-            self.navigationController?.navigationItem.setRightBarButtonItems([self.playPrevious!, playButton, self.playNext!], animated: true)
-            play = true
-        } else {
-            NSNotificationCenter.defaultCenter().postNotificationName("pause", object: nil)
-            let pause = UIBarButtonItem(barButtonSystemItem: .Pause, target: self, action: "playPause:") as UIBarButtonItem
-            self.navigationController?.navigationItem.setRightBarButtonItems([self.playPrevious!, pause, self.playNext!], animated: true)
-            
-            play = false
-        }
+    func makePause (){
+    
+        let pauseButton = UIBarButtonItem(barButtonSystemItem: .Pause, target: self, action: nil) as UIBarButtonItem
+        self.navigationItem.rightBarButtonItems = [playNext!, pauseButton, playPrevious!]
+        NSNotificationCenter.defaultCenter().postNotificationName("playPause", object: nil)
     }
     
-    @IBAction func playPrevious(sender: AnyObject) {
+    func makePlay(){
+            let playButton = UIBarButtonItem(barButtonSystemItem: .Play, target: self, action: nil) as UIBarButtonItem
+            self.navigationItem.rightBarButtonItems = [playNext!, playButton, playPrevious!]
+    }
+    
+    func playPrevious(sender: AnyObject) {
         NSNotificationCenter.defaultCenter().postNotificationName("playPrevious", object: nil)
     }
     
-    @IBAction func playNext(sender: AnyObject) {
+    func playNext(sender: AnyObject) {
         NSNotificationCenter.defaultCenter().postNotificationName("playNext", object: nil)
     }
     // MARK: - ENSideMenu Delegate

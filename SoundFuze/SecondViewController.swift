@@ -119,10 +119,11 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
                 cell.artist.text = resultOption.artists.first!.name
                 
                 if let albumImage: SPTImage? = resultOption.album.covers.first as! SPTImage {
-                    if let image = albumImage!.imageURL.description as? String {
+                    if let image = albumImage!.imageURL.description as String?{
                         if let imageData: NSData? = NSData(contentsOfURL: NSURL(string: image)!) {
-                            
+                            if imageData != nil {
                             cell.albumArtwork.image = UIImage(data: imageData!)
+                            }
                         }
                     }
                 }

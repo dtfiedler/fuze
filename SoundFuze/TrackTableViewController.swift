@@ -66,6 +66,9 @@ class TrackTableViewController: UITableViewController {
         
         //2
         let fetchRequest = NSFetchRequest(entityName: "SongURIs")
+        let sortDescriptor = NSSortDescriptor(key: "order", ascending: true)
+        
+        fetchRequest.sortDescriptors = [sortDescriptor]
         
         //3
         do {

@@ -20,6 +20,7 @@ protocol SongServiceManagerDelegate {
 class HostViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     
+    @IBOutlet weak var hostButton: UIButton!
     @IBOutlet weak var peersTable: UITableView!
     @IBOutlet weak var connectionStatus: UILabel!
     
@@ -28,6 +29,7 @@ class HostViewController: UIViewController, UITableViewDelegate, UITableViewData
     var peerNames: [String] = []
     var queue: [NSURL?] = []
     var notification: NSNotification? = nil
+    let userDefaults = NSUserDefaults.standardUserDefaults()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,13 +37,23 @@ class HostViewController: UIViewController, UITableViewDelegate, UITableViewData
         peersTable.delegate = self
         peersTable.dataSource = self
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "add:", name: "addToQueue", object: nil)
-        //NSNotificationCenter.defaultCenter().postNotificationName("closeMenu", object: nil)
         
-        // Do any additional setup after loading the view.
+        if let connectionsObj : AnyObject = NSUserDefaults.standardUserDefaults().objectForKey("connectedDevices"){
+            print("connected devices \(connectionsObj)")
+            
+        }
     }
     
     override func viewWillAppear(animated: Bool) {
-        NSNotificationCenter.defaultCenter().postNotificationName("closeMenu", object: nil)
+//        if let connectionsObj : [AnyObject] = NSUserDefaults.standardUserDefaults().objectForKey("connectedDevices"){
+//            print("connected devices \(connectionsObj)")
+//            
+////            for items in connectionsObj {
+////                self.peerNames.append(items.description)
+////            }
+//            //let connections = connectionsObj as! String
+//            var parse: [AnyObject?]
+//        }
     }
     
     override func didReceiveMemoryWarning() {
@@ -54,6 +66,57 @@ class HostViewController: UIViewController, UITableViewDelegate, UITableViewData
         self.connectionStatus.text = "Refreshing..."
     }
     
+    
+    var timer = NSTimer()
+    var host = false
+    
+    @IBAction func hostNetwork(sender: AnyObject) {
+        
+        if (!host){
+            
+        
+            let alertController = UIAlertController(title: "Host or Fuze?", message: "Would you like to host a playlist, or fuze with another?", preferredStyle: .Alert)
+            let hostAction = UIAlertAction(title: "Host", style: .Default, handler: {(action: UIAlertAction!) in
+                self.connectionStatus.text = "Currently Hosting..."
+            })
+            
+            let connectAction = UIAlertAction(title: "Fuze", style: .Default, handler: {(action: UIAlertAction!) in
+                self.connectionStatus.text = "Fuzing with others"
+                })
+            
+            alertController.addAction(hostAction)
+            alertController.addAction(connectAction)
+            
+            self.presentViewController(alertController, animated: true, completion: nil)
+
+            timer = NSTimer.scheduledTimerWithTimeInterval(2.0, target: self, selector: Selector("fadeInOut"), userInfo: nil, repeats: true)
+            
+            songService.start()
+            
+            self.hostButton.enabled = true
+            host = true
+            
+        } else {
+            self.connectionStatus.text = "Tap to Fuze"
+            timer.invalidate()
+            songService.stop()
+            host = false
+            self.hostButton.enabled = true
+        }
+    }
+    
+    func fadeInOut(){
+        UIView.animateWithDuration(2.0, delay: 0.0, options: UIViewAnimationOptions.CurveEaseInOut, animations: {
+            if (self.hostButton.alpha == 1.0){
+                self.hostButton.alpha = 0.0
+            } else {
+                self.hostButton.alpha = 1.0
+            }
+            }, completion: nil)
+        self.hostButton.enabled = true
+    }
+    
+    
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
     }
@@ -64,6 +127,7 @@ class HostViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         print("table refreshed")
+        
         let cell = tableView.dequeueReusableCellWithIdentifier("peerID", forIndexPath: indexPath) as UITableViewCell
         if (!peerNames.isEmpty && indexPath.row < peerNames.count){
 
@@ -88,24 +152,20 @@ class HostViewController: UIViewController, UITableViewDelegate, UITableViewData
 }
 
 
-
-
 extension HostViewController : SongServiceManagerDelegate {
     
     func connectedDevicesChanged(manager: SongServiceManager, connectedDevices: [String]) {
         NSOperationQueue.mainQueue().addOperationWithBlock {
             if (!connectedDevices.isEmpty){
-                self.connectionStatus.text = "Select the users you would like to fuze with!"
                 self.peerNames = connectedDevices
                 print("Connected to \(connectedDevices)")
-                self.peersTable.reloadData()
             } else {
-                self.connectionStatus.text = "No fuzers found..."
                 self.peerNames = []
-
             }
         }
         
+        userDefaults.setObject(connectedDevices, forKey: "connectedDevices")
+        userDefaults.synchronize()
         self.peersTable.reloadData()
     }
 
@@ -114,22 +174,12 @@ extension HostViewController : SongServiceManagerDelegate {
         let newTrack = userInfo["track"]
         songService.updateQueue(newTrack!.uri!.description)
         let user = userInfo["user"] as! String
-        if (user != UIDevice.currentDevice().name){
-            var alertview = UIAlertView()
-            alertview.title = "Queue updated by..."
-            alertview.message = "The queue has been updated"
-            alertview.delegate = self
-            alertview.addButtonWithTitle("Okay")
-            alertview.show()
-            self.dismissViewControllerAnimated(true, completion: nil)
-        }
     
     }
     
     func addToQueue(manager: SongServiceManager, track: String) {
             NSNotificationCenter.defaultCenter().postNotificationName("addOthersToQueue", object: nil, userInfo: ["track": track])
             let alertController = UIAlertController(title: "Track added", message: "A track has been added by another user", preferredStyle: .Alert)
-        
         
     }
     
