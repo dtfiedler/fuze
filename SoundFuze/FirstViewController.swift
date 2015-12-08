@@ -9,6 +9,12 @@
 import UIKit
 import AVFoundation
 import CoreData
+import PKHUD
+
+class Track {
+    var uri = NSURL()
+    var position = Int()
+}
 
 class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate {
     
@@ -36,7 +42,7 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
     var selectedIndex: NSIndexPath?
     var position: NSTimeInterval?
     var next = 0
-    var uris: [NSURL] = []
+    var uris: [Track] = []
     var savedURIs = [NSManagedObject]()
     var currentPlaybackPosition: NSTimeInterval?
     
@@ -45,7 +51,6 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         
         self.trackTable.delegate = self
         self.trackTable.dataSource = self
-
         
         let longPress = UILongPressGestureRecognizer(target: self, action: "longPressGestureRecognized:")
         longPress.delegate = self
@@ -101,21 +106,21 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
+    
     override func viewWillAppear(animated: Bool) {
         loadRecent()
-        self.trackTable.selectRowAtIndexPath(selectedIndex, animated: false, scrollPosition: .None)
-    }
-    override func viewWillDisappear(animated: Bool) {
-        saveRecent()
-    }
-    
-    override func viewDidDisappear(animated: Bool) {
-        saveRecent()
+        let indexPath = NSUserDefaults.standardUserDefaults().objectForKey("indexPathRow") as? NSNumber
+//        if (indexPath != nil){
+//        self.tableView(trackTable, didSelectRowAtIndexPath: NSIndexPath(forRow: indexPath as! Int, inSection: 0))
+//        }
+        self.uris.sortInPlace({$1.position > $0.position})
     }
     
     func load(notification: NSNotification){
         loadStoredPlaylist()
+        saveRecent()
     }
+    
     
     func loadStoredPlaylist(){
         //1
@@ -126,8 +131,7 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         
         //2
         let fetchRequest = NSFetchRequest(entityName: "Load")
-        let userDefaults = NSUserDefaults.standardUserDefaults()
-        let sortDescriptor = NSSortDescriptor(key: "order", ascending: true)
+        let sortDescriptor = NSSortDescriptor(key: "position", ascending: true)
         
         fetchRequest.sortDescriptors = [sortDescriptor]
 
@@ -144,13 +148,14 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         } catch let error as NSError {
             print("Could not fetch \(error), \(error.userInfo)")
         }
+        
+        saveRecent()
     }
     
     func loadRecent(){
         //1
         
-        self.queuedTracks.removeAll()
-        self.uris.removeAll()
+        self.uris.removeAll(keepCapacity: true)
         self.savedURIs.removeAll()
         
         let appDelegate =
@@ -160,7 +165,7 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         
         //2
         let fetchRequest = NSFetchRequest(entityName: "Recent")
-        let sortDescriptor = NSSortDescriptor(key: "order", ascending: true)
+        let sortDescriptor = NSSortDescriptor(key: "position", ascending: false)
         
         fetchRequest.sortDescriptors = [sortDescriptor]
         
@@ -171,10 +176,9 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
             try managedContext.executeFetchRequest(fetchRequest)
             
             if (!results.isEmpty){
-                for result in results {
-                    savedURIs.append(result as! NSManagedObject)
+                for item in results {
+                    savedURIs.append(item as! NSManagedObject)
                 }
-               // savedURIs = results as! [NSManagedObject]
                 loadTracks(session)
             }
         } catch let error as NSError {
@@ -182,36 +186,43 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         }
     }
     
-    func loadTracks(session: SPTSession!){
-        print("loading tracks...")
-        self.uris.removeAll()
-        self.queuedTracks.removeAll()
 
-        for trackURI in savedURIs {
-        SPTRequest.requestItemAtURI(NSURL(string: trackURI.valueForKey("uri") as! String), withSession: session, callback: {(error: NSError!, trackObj: AnyObject?) -> Void in
+    func loadTracks(session: SPTSession!){
+    print("loading tracks...")
+    
+    PKHUD.sharedHUD.contentView = PKHUDProgressView()
+    PKHUD.sharedHUD.show()
+        
+    for trackURI in savedURIs {
+        
+        let uri = trackURI.valueForKey("uri") as! String
+        SPTRequest.requestItemAtURI(NSURL(string: uri), withSession: session, callback: {(error: NSError!, trackObj: AnyObject?) -> Void in
             if (error != nil){
                 print("track lookup got error: \(error)")
                 return
             }
-           
+            
             let track = trackObj as! SPTTrack
-            self.uris.append(track.uri)
+            let add = Track ()
+            add.uri = (track.uri)
+            add.position = trackURI.valueForKey("position") as! Int
+            self.uris.append(add)
+            self.uris.sortInPlace({ $1.position > $0.position })
             self.trackTable.reloadData()
-           })
-        }
-
+        })
+    }
+        
         self.player?.queueURIs(self.uris, clearQueue: true, callback: nil)
+        PKHUD.sharedHUD.hide(afterDelay: 0.50)
+    }
     
+    func organizePlaylist(track: SPTTrack){
+
     }
     
     @IBAction func clearQueue(sender: AnyObject) {
         self.uris.removeAll()
-        self.queuedTracks.removeAll()
         self.trackTable.reloadData()
-    }
-    
-    @IBAction func mostRecentQueue(sender: AnyObject) {
-        
     }
     
     func playUsingSession(session: SPTSession!, trackIndex: Int){
@@ -226,7 +237,14 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
                 return
             }
         })
-        self.player?.playURIs(uris, fromIndex: Int32(trackIndex), callback: nil)
+        
+        var queue: [NSURL] = []
+        for track in uris {
+            queue.append(track.uri)
+        }
+        self.player?.queueURIs(queue, clearQueue: true, callback: nil)
+        self.player?.playURIs(queue, fromIndex: Int32(trackIndex), callback: nil)
+        queue.removeAll(keepCapacity: false)
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -242,7 +260,7 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         let cell = tableView.dequeueReusableCellWithIdentifier("track", forIndexPath: indexPath) as! TrackTableViewCell
         if (indexPath.row < self.uris.count){
            
-            let trackURI = uris[indexPath.row]
+            let trackURI = self.uris[indexPath.row].uri
                 
             SPTRequest.requestItemAtURI(trackURI, withSession: session, callback: {(error: NSError!, trackObj: AnyObject?) -> Void in
                 if (error != nil){
@@ -283,7 +301,7 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
             self.trackTable.selectRowAtIndexPath(NSIndexPath(forRow: selectedIndex!.row + 1, inSection: (selectedIndex?.section)!), animated: true, scrollPosition: .None)
             self.tableView(trackTable, didSelectRowAtIndexPath: NSIndexPath(forRow: selectedIndex!.row + 1, inSection: (selectedIndex?.section)!))
         }
-        cell.progress.setProgress(Float(current), animated: true)
+            cell.progress.setProgress(Float(current), animated: true)
         } else {
             timer.invalidate()
         }
@@ -295,12 +313,18 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         
         for (var i = 0; i < self.uris.count; i++){
             let indexPath = NSIndexPath(forRow: i, inSection: 0)
-            self.trackTable.cellForRowAtIndexPath(indexPath)?.backgroundColor = UIColor.clearColor()
+            UIView.animateWithDuration(0.5, animations: {(
+                self.trackTable.cellForRowAtIndexPath(indexPath)?.backgroundColor = UIColor.clearColor()
+            )}, completion: nil)
             let deselect = self.trackTable.cellForRowAtIndexPath((indexPath)) as! TrackTableViewCell
             deselect.progress.hidden = true
         }
         
         cell.progress.hidden = false
+    
+        if timer != nil {
+            timer.invalidate()
+        }
         
         if ((selected == nil || cell != selected)){
         
@@ -346,6 +370,8 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
             }
             selected = cell
             selectedIndex = indexPath
+            NSUserDefaults.standardUserDefaults().setObject(indexPath.row as NSNumber, forKey: "indexPathRow")
+            NSUserDefaults.standardUserDefaults().synchronize()
             timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: Selector("updateProgress"), userInfo: ["cell": cell], repeats: true)
             NSNotificationCenter.defaultCenter().postNotificationName("makePause", object: nil)
         } else {
@@ -377,11 +403,14 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
             let alertController = UIAlertController(title: "Clear queue?", message: "Would you like to clear the current queue?", preferredStyle: .Alert)
             let clearAction = UIAlertAction(title: "Clear", style: .Default, handler: {(action: UIAlertAction!) -> Void in
                 self.uris.removeAll()
+                self.removePreviousRecentPlaylists()
                 self.trackTable.reloadData()
         })
             let cancelAction = UIAlertAction(title:"Cancel", style: .Default, handler:nil)
-            alertController.addAction(clearAction)
+            
             alertController.addAction(cancelAction)
+            alertController.addAction(clearAction)
+            
             self.presentViewController(alertController, animated: true, completion: nil)
         }
     }
@@ -393,9 +422,10 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
             self.uris.removeAtIndex(indexPath.row)
             self.trackTable.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
         }
+        
     }
 
-    //
+    
     func add(notification: NSNotification){
        let userInfo: Dictionary <String,AnyObject!> = notification.userInfo as! Dictionary<String,
         AnyObject!>
@@ -404,20 +434,17 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         let trackURI = newTrack.uri as NSURL
         
         
-        if (uris.contains(trackURI)){
-            //don't add same tracks twice without asking
-            NSLog("Track already in queue")
-            //notify user and ask if they still want to add?
-            
-        } else {
             //add to end of queue
-            self.uris.append(trackURI)
-            self.queuedTracks.append(newTrack as SPTPartialTrack)
-        }
-        saveRecent()
-        loadRecent()
+            let add = Track()
+            add.uri = trackURI
+            add.position = self.uris.count
+            self.uris.append(add)
+
         
+        saveRecent()
+        self.uris.sortInPlace({  $1.position > $0.position })
         self.trackTable.reloadData()
+        
     }
     
     func addOthers(notification: NSNotification){
@@ -436,22 +463,19 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
                 return
             }
             newTrack = trackObj as! SPTPartialTrack
-            self.queuedTracks.append(newTrack! as SPTPartialTrack)
         })
 
         
-        if (uris.contains(trackURI!)){
-            NSLog("Track already in queue")
-        } else {
-            //add to end of queue
-            self.uris.append(trackURI!)
-        }
-        self.player?.queueURIs(self.uris, clearQueue: true, callback: nil)
+        let add = Track()
+        add.uri = trackURI!
+        add.position = self.uris.count
+        self.uris.append(add)
+        
         saveRecent()
-        loadRecent()
+        
+        
+        self.uris.sortInPlace({  $1.position > $0.position })
         self.trackTable.reloadData()
-        
-        
     }
     
     func saveRecent(){
@@ -469,6 +493,7 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
                 // managedContext.executeRequest(deleteRequest, withContext: managedContext)
             } catch let error as NSError {
                 // TODO: handle the error
+                print("ERROR ERROR ERROR ON DELETE")
             }
         }
         
@@ -476,10 +501,8 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         let entity =  NSEntityDescription.entityForName("Recent", inManagedObjectContext:managedContext)
         for trackURI in self.uris {
             let song = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedContext)
-            song.setValue(trackURI.description, forKey: "uri")
-            song.setValue(self.uris.indexOf(trackURI), forKey: "order")
-            print(trackURI.description)
-            print(self.uris.indexOf(trackURI))
+            song.setValue(trackURI.uri.description, forKey: "uri")
+            song.setValue(trackURI.position, forKey: "position")
         }
         
         
@@ -508,12 +531,11 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
             //2
             let entity =  NSEntityDescription.entityForName("SongURIs", inManagedObjectContext:managedContext)
             let text = alertController.textFields![0].text as String!
-            
             for trackURI in self.uris {
-                var song = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedContext)
-                song.setValue(trackURI.description, forKey: "uri")
+                let song = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedContext)
+                song.setValue(trackURI.uri.description, forKey: "uri")
                 song.setValue(text, forKey: "name")
-                song.setValue(self.uris.indexOf(trackURI)! + 1, forKey: "order")
+                song.setValue(trackURI.position, forKey: "position")
             }
             
             do {
@@ -593,7 +615,7 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
     }
     
     
-    func removePreviousLoadedPlaylists(){
+    func removePreviousRecentPlaylists(){
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         
         let managedContext = appDelegate.managedObjectContext

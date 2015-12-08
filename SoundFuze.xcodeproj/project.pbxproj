@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4CD87C563C6EACEE1F8C60DC /* Pods_SoundFuze.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D9DBBA141105D19BB7CED89A /* Pods_SoundFuze.framework */; };
 		C40ECFE31BE29B7400E93BA0 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C40ECFE21BE29B7400E93BA0 /* CoreData.framework */; };
 		C40ED05F1BE29DA700E93BA0 /* fuze.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = C40ED05D1BE29DA700E93BA0 /* fuze.xcdatamodeld */; };
 		C41443861C08C67E008E6C12 /* TrackTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C41443851C08C67E008E6C12 /* TrackTableViewController.swift */; };
@@ -78,6 +79,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		46678E9A6B5BA404BC60A3D5 /* Pods-SoundFuze.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SoundFuze.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SoundFuze/Pods-SoundFuze.debug.xcconfig"; sourceTree = "<group>"; };
+		A56B779D4DBF643D9B22212B /* Pods-SoundFuze.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SoundFuze.release.xcconfig"; path = "Pods/Target Support Files/Pods-SoundFuze/Pods-SoundFuze.release.xcconfig"; sourceTree = "<group>"; };
 		C40ECFE21BE29B7400E93BA0 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		C40ED05E1BE29DA700E93BA0 /* hello.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = hello.xcdatamodel; sourceTree = "<group>"; };
 		C41443851C08C67E008E6C12 /* TrackTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackTableViewController.swift; sourceTree = "<group>"; };
@@ -137,6 +140,7 @@
 		C4D7071D1BDEE6C800C2EA24 /* TrackTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackTableViewCell.swift; sourceTree = "<group>"; };
 		C4E95FF41BE0060100417D26 /* HostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HostViewController.swift; sourceTree = "<group>"; };
 		C4E95FF61BE0063F00417D26 /* SongServiceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongServiceManager.swift; sourceTree = "<group>"; };
+		D9DBBA141105D19BB7CED89A /* Pods_SoundFuze.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SoundFuze.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -149,6 +153,7 @@
 				C4C8458B1BDABD0A00C404A5 /* AVFoundation.framework in Frameworks */,
 				C4B506E11BDE974C0096EC11 /* AudioToolbox.framework in Frameworks */,
 				C427E6351BDEA1EC0007D34C /* Spotify.framework in Frameworks */,
+				4CD87C563C6EACEE1F8C60DC /* Pods_SoundFuze.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -169,6 +174,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2BF70275068662E9AC75B1EA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D9DBBA141105D19BB7CED89A /* Pods_SoundFuze.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		348C8C8DB1A2D8A868853E30 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				46678E9A6B5BA404BC60A3D5 /* Pods-SoundFuze.debug.xcconfig */,
+				A56B779D4DBF643D9B22212B /* Pods-SoundFuze.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		C426D1701C061D4B006A6946 /* SideMenu */ = {
 			isa = PBXGroup;
 			children = (
@@ -229,6 +251,8 @@
 				C4C845581BDABB1E00C404A5 /* Products */,
 				C4C845DB1BDAC04D00C404A5 /* SystemConfiguration.framework */,
 				C4C8458A1BDABD0A00C404A5 /* AVFoundation.framework */,
+				348C8C8DB1A2D8A868853E30 /* Pods */,
+				2BF70275068662E9AC75B1EA /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -297,9 +321,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C4C845811BDABB1E00C404A5 /* Build configuration list for PBXNativeTarget "SoundFuze" */;
 			buildPhases = (
+				EA35FA1A14947503B5A6F0FC /* Check Pods Manifest.lock */,
 				C4C845531BDABB1E00C404A5 /* Sources */,
 				C4C845541BDABB1E00C404A5 /* Frameworks */,
 				C4C845551BDABB1E00C404A5 /* Resources */,
+				F9B7F0EC2E0F90032BC2EC3C /* Embed Pods Frameworks */,
+				3794A6B9015BBAE17F7445CF /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -445,6 +472,54 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		3794A6B9015BBAE17F7445CF /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SoundFuze/Pods-SoundFuze-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		EA35FA1A14947503B5A6F0FC /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		F9B7F0EC2E0F90032BC2EC3C /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SoundFuze/Pods-SoundFuze-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		C4C845531BDABB1E00C404A5 /* Sources */ = {
@@ -608,6 +683,7 @@
 		};
 		C4C845821BDABB1E00C404A5 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 46678E9A6B5BA404BC60A3D5 /* Pods-SoundFuze.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = SoundFuze/SoundFuze.entitlements;
@@ -619,6 +695,7 @@
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = SoundFuze/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.xor.SoundFuze;
@@ -630,6 +707,7 @@
 		};
 		C4C845831BDABB1E00C404A5 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A56B779D4DBF643D9B22212B /* Pods-SoundFuze.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = SoundFuze/SoundFuze.entitlements;
@@ -641,6 +719,7 @@
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = SoundFuze/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.xor.SoundFuze;

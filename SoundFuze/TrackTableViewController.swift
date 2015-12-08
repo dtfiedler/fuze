@@ -8,11 +8,16 @@
 
 import UIKit
 
+class PlaylistTrack {
+    var song = SPTPartialTrack()
+    var position = Int()
+}
+
 class TrackTableViewController: UITableViewController {
     
     var session: SPTSession?
     var trackURIs = [NSManagedObject]()
-    var tracks: [SPTPartialTrack] = []
+    var tracks: [PlaylistTrack] = []
     var playlist: String?
     
     @IBOutlet var trackTable: UITableView!
@@ -66,7 +71,7 @@ class TrackTableViewController: UITableViewController {
         
         //2
         let fetchRequest = NSFetchRequest(entityName: "SongURIs")
-        let sortDescriptor = NSSortDescriptor(key: "order", ascending: true)
+        let sortDescriptor = NSSortDescriptor(key: "position", ascending: false)
         
         fetchRequest.sortDescriptors = [sortDescriptor]
         
@@ -84,8 +89,6 @@ class TrackTableViewController: UITableViewController {
     func loadTracks(session: SPTSession!, playlist: String!){
         print("loading tracks...")
         
-        //self.trackURIs.removeAll()
-        
         for trackURI in trackURIs {
             
             if ((trackURI.valueForKey("name") as! String).lowercaseString == playlist.lowercaseString){
@@ -96,7 +99,11 @@ class TrackTableViewController: UITableViewController {
                     }
                     
                     let track = trackObj as! SPTTrack
-                    self.tracks.append(track as SPTPartialTrack)
+                    let add = PlaylistTrack()
+                    add.song = track
+                    add.position = trackURI.valueForKey("position") as! Int
+                    self.tracks.append(add)
+                    self.tracks.sortInPlace({$1.position > $0.position})
                     self.trackTable.reloadData()
                 })
             }
@@ -114,7 +121,7 @@ class TrackTableViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("track", forIndexPath: indexPath)
-        cell.textLabel?.text = tracks[indexPath.row].name
+        cell.textLabel?.text = tracks[indexPath.row].song.name
         return cell
     }
     
@@ -127,14 +134,15 @@ class TrackTableViewController: UITableViewController {
             let managedContext = appDelegate.managedObjectContext
             
             //2
-            let entity =  NSEntityDescription.entityForName("Load", inManagedObjectContext:managedContext)
+            let entity =  NSEntityDescription.entityForName("Recent", inManagedObjectContext:managedContext)
             
             //need to delete all previous values in Load entity
             self.removePreviousLoadedPlaylists()
             
             for trackURI in self.tracks {
                 var song = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedContext)
-                song.setValue(trackURI.uri.description, forKey: "uri")
+                song.setValue(trackURI.song.uri.description, forKey: "uri")
+                song.setValue(trackURI.position, forKey: "position")
             }
             
             do {
@@ -148,7 +156,7 @@ class TrackTableViewController: UITableViewController {
             var destViewController : UIViewController
             destViewController = mainStoryboard.instantiateViewControllerWithIdentifier("navController")
             self.presentViewController(destViewController, animated: true, completion: {() in
-                NSNotificationCenter.defaultCenter().postNotificationName("loadPlaylist", object: nil)
+               // NSNotificationCenter.defaultCenter().postNotificationName("loadPlaylist", object: nil)
             })
             
         })
@@ -173,7 +181,7 @@ class TrackTableViewController: UITableViewController {
         let managedContext = appDelegate.managedObjectContext
         
         //2
-        let fetchRequest = NSFetchRequest(entityName: "Load")
+        let fetchRequest = NSFetchRequest(entityName: "Recent")
         if #available(iOS 9.0, *) {
             let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
             do {

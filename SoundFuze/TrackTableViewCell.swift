@@ -7,13 +7,14 @@
 //
 
 import UIKit
+import MRProgress
 
 class TrackTableViewCell: UITableViewCell {
 
     @IBOutlet weak var trackName: UILabel!
     @IBOutlet weak var artist: UILabel!
     @IBOutlet weak var albumArtwork: UIImageView!
-    @IBOutlet weak var progress: UIProgressView!
+    @IBOutlet weak var progress: MRCircularProgressView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
