@@ -15,9 +15,14 @@ class TrackTableViewCell: UITableViewCell {
     @IBOutlet weak var artist: UILabel!
     @IBOutlet weak var albumArtwork: UIImageView!
     @IBOutlet weak var progress: MRCircularProgressView!
+    @IBOutlet weak var upVote: UIButton!
+    @IBOutlet weak var upVoteLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        
+        //self.upVote.alpha = 0.0
+        //self.upVote.enabled = false
         // Initialization code
     }
 

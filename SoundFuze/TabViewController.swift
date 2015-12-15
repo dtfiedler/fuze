@@ -20,15 +20,16 @@ class TabViewController: UITabBarController, ENSideMenuDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.sideMenuController()?.sideMenu?.delegate = self
+        self.sideMenuController()?.rightMenu?.delegate = self
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "makePause", name: "makePause", object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "makePlay", name: "makePlay", object:nil)
+        //NSNotificationCenter.defaultCenter().addObserver(self, selector: "makePause", name: "makePause", object: nil)
+        //NSNotificationCenter.defaultCenter().addObserver(self, selector: "makePlay", name: "makePlay", object:nil)
         
-        playPrevious = UIBarButtonItem(barButtonSystemItem: .Rewind , target: self, action: "playPrevious:")
-        playNext = UIBarButtonItem(barButtonSystemItem: .FastForward, target: self, action: "playNext:")
-        playPause = UIBarButtonItem(barButtonSystemItem: .Play, target: self, action: nil)
-        
-        self.navigationItem.rightBarButtonItems = [playNext!, playPause!, playPrevious!]
+//        playPrevious = UIBarButtonItem(barButtonSystemItem: .Rewind , target: self, action: "playPrevious:")
+//        playNext = UIBarButtonItem(barButtonSystemItem: .FastForward, target: self, action: "playNext:")
+//        playPause = UIBarButtonItem(barButtonSystemItem: .Play, target: self, action: nil)
+//        
+        //self.navigationItem.rightBarButtonItems = [playNext!, playPause!, playPrevious!]
     }
     
     override func didReceiveMemoryWarning() {
@@ -45,25 +46,10 @@ class TabViewController: UITabBarController, ENSideMenuDelegate {
         NSNotificationCenter.defaultCenter().postNotificationName("saveQueue", object: nil)
     }
     
-    func makePause (){
-    
-        let pauseButton = UIBarButtonItem(barButtonSystemItem: .Pause, target: self, action: nil) as UIBarButtonItem
-        self.navigationItem.rightBarButtonItems = [playNext!, pauseButton, playPrevious!]
-        NSNotificationCenter.defaultCenter().postNotificationName("playPause", object: nil)
+    @IBAction func toggleRightSideMenu(sender: AnyObject){
+        toggleRightMenuView()
     }
     
-    func makePlay(){
-            let playButton = UIBarButtonItem(barButtonSystemItem: .Play, target: self, action: nil) as UIBarButtonItem
-            self.navigationItem.rightBarButtonItems = [playNext!, playButton, playPrevious!]
-    }
-    
-    func playPrevious(sender: AnyObject) {
-        NSNotificationCenter.defaultCenter().postNotificationName("playPrevious", object: nil)
-    }
-    
-    func playNext(sender: AnyObject) {
-        NSNotificationCenter.defaultCenter().postNotificationName("playNext", object: nil)
-    }
     // MARK: - ENSideMenu Delegate
     func sideMenuWillOpen() {
         print("sideMenuWillOpen")

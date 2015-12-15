@@ -26,7 +26,8 @@ class TrackTableViewController: UITableViewController {
         super.viewDidLoad()
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: "pushToQueue")
-        
+        let font = UIFont(name: "Quicksand", size: 18)
+        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor(), NSFontAttributeName: font!]
         if let sessionObj : AnyObject = NSUserDefaults.standardUserDefaults().objectForKey("SpotifySession") {
             
             let sessionDataObj : NSData = sessionObj as! NSData
@@ -143,6 +144,7 @@ class TrackTableViewController: UITableViewController {
                 var song = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedContext)
                 song.setValue(trackURI.song.uri.description, forKey: "uri")
                 song.setValue(trackURI.position, forKey: "position")
+                song.setValue(0, forKey: "upvotes")
             }
             
             do {
@@ -156,7 +158,6 @@ class TrackTableViewController: UITableViewController {
             var destViewController : UIViewController
             destViewController = mainStoryboard.instantiateViewControllerWithIdentifier("navController")
             self.presentViewController(destViewController, animated: true, completion: {() in
-               // NSNotificationCenter.defaultCenter().postNotificationName("loadPlaylist", object: nil)
             })
             
         })
@@ -165,8 +166,8 @@ class TrackTableViewController: UITableViewController {
                 self.dismissViewControllerAnimated(true, completion: nil)
             })
         
+                alertController.addAction(cancelAction)
         alertController.addAction(defaultAction)
-        alertController.addAction(cancelAction)
         
         self.presentViewController(alertController, animated: true, completion: nil)
         
@@ -182,7 +183,6 @@ class TrackTableViewController: UITableViewController {
         
         //2
         let fetchRequest = NSFetchRequest(entityName: "Recent")
-        if #available(iOS 9.0, *) {
             let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
             do {
                 
@@ -193,11 +193,6 @@ class TrackTableViewController: UITableViewController {
             } catch let error as NSError {
                 // TODO: handle the error
             }
-
-        } else {
-            // Fallback on earlier versions
-        }
-        
         
     }
     

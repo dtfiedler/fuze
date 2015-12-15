@@ -14,8 +14,10 @@ class MyNavigationController: ENSideMenuNavigationController, ENSideMenuDelegate
         super.viewDidLoad()
         
         sideMenu = ENSideMenu(sourceView: self.view, menuViewController: MyMenuTableViewController(), menuPosition:.Left)
+        rightMenu = ENSideMenu(sourceView: self.view, menuViewController: RightMenuTableViewController(), menuPosition:.Right)
         //sideMenu?.delegate = self //optional
-        sideMenu?.menuWidth = 180.0 // optional, default is 160
+        sideMenu?.menuWidth = 160.0 // optional, default is 160
+        rightMenu?.menuWidth = 160.0
         //sideMenu?.bouncingEnabled = false
         
         // make navigation bar showing over side menu

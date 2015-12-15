@@ -17,6 +17,7 @@ class SongServiceManager : NSObject {
     private let myPeerId = MCPeerID(displayName: UIDevice.currentDevice().name)
     private let serviceAdvertiser : MCNearbyServiceAdvertiser
     private let serviceBrowser : MCNearbyServiceBrowser
+    private var upVote = false
     
     var delegate : SongServiceManagerDelegate?
     
@@ -54,11 +55,40 @@ class SongServiceManager : NSObject {
         NSLog("%@", "update queue: \(track)")
         if session.connectedPeers.count > 0 {
                 print("sending update")
-            var error: NSError?
             do { try self.session.sendData(track.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!, toPeers: self.session.connectedPeers, withMode: MCSessionSendDataMode.Reliable)
                     print("sent song successfully")
             } catch {
             print("\(error)")
+        }
+        }
+    }
+    
+    func updateNonHostQueue(queue: [String?]){
+        if session.connectedPeers.count > 0 {
+            print("sending current queue of \(queue.count) tracks to non hosts")
+            for track in queue {
+                if session.connectedPeers.count > 0 {
+                    print(track!)
+                    do { try self.session.sendData(track!.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!, toPeers: self.session.connectedPeers, withMode: MCSessionSendDataMode.Reliable)
+                        print("sent song successfully")
+                    } catch {
+                        print("\(error)")
+                    }
+                }
+            }
+        }
+    }
+    
+    func upVoteSong(var trackIdentifier: String?){
+        if(session.connectedPeers.count > 0){
+            upVote = true
+            trackIdentifier = trackIdentifier! + " UPVOTE"
+        do {
+            try self.session.sendData(trackIdentifier!.dataUsingEncoding(NSUTF8StringEncoding)!, toPeers: self.session.connectedPeers, withMode: MCSessionSendDataMode.Reliable)
+            
+            print("upvoted \(trackIdentifier!)")
+        } catch {
+            print("upvote failed...")
         }
         }
     }
@@ -115,13 +145,22 @@ extension SongServiceManager : MCSessionDelegate {
     func session(session: MCSession!, peer peerID: MCPeerID!, didChangeState state: MCSessionState) {
         NSLog("%@", "peer \(peerID) didChangeState: \(state.stringValue())")
         self.delegate?.connectedDevicesChanged(self, connectedDevices: session.connectedPeers.map({$0.displayName}))
+        if state == .NotConnected{
+            print("disconnected from host, must reconnect")
+        }
     }
     
     func session(session: MCSession!, didReceiveData data: NSData!, fromPeer peerID: MCPeerID!) {
         NSLog("%@", "didReceiveData: \(data)")
         let str: NSString? = NSString(data: data!, encoding: NSUTF8StringEncoding)
-        let string: String? = str as String!
-        self.delegate!.addToQueue(self, track: string!)
+        var string: String? = str as String!
+        if ((((str?.containsString("UPVOTE").boolValue))) == false){
+            self.delegate!.addToQueue(self, track: string!)
+        } else {
+            string = string?.stringByReplacingOccurrencesOfString("UPVOTE", withString: "")
+            self.delegate!.upvotingSong(self, trackIdentifier: string!)
+            upVote = false
+        }
     }
     
     func session(session: MCSession!, didReceiveStream stream: NSInputStream!, withName streamName: String!, fromPeer peerID: MCPeerID!) {

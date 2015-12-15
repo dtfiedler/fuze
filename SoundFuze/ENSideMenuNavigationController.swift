@@ -11,6 +11,7 @@ import UIKit
 public class ENSideMenuNavigationController: UINavigationController, ENSideMenuProtocol {
     
     public var sideMenu : ENSideMenu?
+    public var rightMenu: ENSideMenu?
     public var sideMenuAnimationType : ENSideMenuAnimation = .Default
     
     
@@ -27,6 +28,7 @@ public class ENSideMenuNavigationController: UINavigationController, ENSideMenuP
         }
 
         sideMenu = ENSideMenu(sourceView: self.view, menuViewController: menuViewController, menuPosition:.Left)
+        rightMenu = ENSideMenu(sourceView: self.view, menuViewController: menuViewController, menuPosition:.Right)
         view.bringSubviewToFront(navigationBar)
     }
 
@@ -42,6 +44,7 @@ public class ENSideMenuNavigationController: UINavigationController, ENSideMenuP
     // MARK: - Navigation
     public func setContentViewController(contentViewController: UIViewController) {
         self.sideMenu?.toggleMenu()
+        //self.rightMenu?.toggleMenu()
         switch sideMenuAnimationType {
         case .None:
             self.viewControllers = [contentViewController]

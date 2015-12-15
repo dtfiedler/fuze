@@ -27,7 +27,8 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
         self.searchTable.delegate = self
         self.searchTable.dataSource = self
         self.searchBar.delegate = self
-        self.searchTable.estimatedRowHeight = 67
+        self.searchTable.multipleTouchEnabled = true
+        //self.searchTable.estimatedRowHeight = 67
         queryType = SPTSearchQueryType.QueryTypeTrack
 
         let userDefaults = NSUserDefaults.standardUserDefaults()
@@ -219,7 +220,7 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
     }
     
     func searchDisplayControllerDidBeginSearch(controller: UISearchDisplayController) {
-        sleep(2)
+        //sleep(2)
     }
     
     func searchBarCancelButtonClicked(searchBar: UISearchBar) {
@@ -234,13 +235,14 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
         let searchText: String! = self.searchBar.text
         
         if (!searchText.isEmpty) {
-            SPTRequest.performSearchWithQuery(searchText, queryType: queryType, offset: 0, session: self.session, callback: {(error: NSError!, result: AnyObject?) -> Void in
+            SPTRequest.performSearchWithQuery(searchText, queryType: queryType, session: self.session, callback: {(error: NSError!, result: AnyObject?) -> Void in
                 if (error != nil){
                     print("Error searching: \(error)")
                     return
                 }
                 let trackListPage = result as! SPTListPage
                 
+                if result != nil {
                 if (self.queryType == SPTSearchQueryType.QueryTypeTrack){
                     
                     for item in trackListPage.items {
@@ -257,6 +259,7 @@ class SecondViewController: UIViewController, UITableViewDelegate, UITableViewDa
                     for item in trackListPage.items{
                         self.albums.append(item as! SPTPartialAlbum)
                     }
+                }
                 }
                 
             })

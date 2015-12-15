@@ -1,14 +1,14 @@
 //
-//  MyMenuTableViewController.swift
-//  SwiftSideMenu
+//  RightMenuTableViewController.swift
+//  SoundFuze
 //
-//  Created by Evgeny Nazarov on 29.09.14.
-//  Copyright (c) 2014 Evgeny Nazarov. All rights reserved.
+//  Created by Dylan Fiedler on 12/8/15.
+//  Copyright © 2015 xor. All rights reserved.
 //
 
 import UIKit
 
-class MyMenuTableViewController: UITableViewController {
+class RightMenuTableViewController: UITableViewController {
     var selectedMenuItem : Int = 0
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,28 +20,28 @@ class MyMenuTableViewController: UITableViewController {
         tableView.scrollsToTop = false
         
         // Preserve selection between presentations
-        self.clearsSelectionOnViewWillAppear = false
+        self.clearsSelectionOnViewWillAppear = true
         
-        tableView.selectRowAtIndexPath(NSIndexPath(forRow: selectedMenuItem, inSection: 0), animated: false, scrollPosition: .Middle)
+        //tableView.selectRowAtIndexPath(NSIndexPath(forRow: selectedMenuItem, inSection: 0), animated: false, scrollPosition: .Middle)
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
     // MARK: - Table view data source
-
+    
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // Return the number of sections.
         return 1
     }
-
+    
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // Return the number of rows in the section.
-        return 5
+        return 7
     }
-
+    
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         var cell = tableView.dequeueReusableCellWithIdentifier("CELL")
@@ -57,19 +57,30 @@ class MyMenuTableViewController: UITableViewController {
         
         var text: String?
         
+        let image = UIImageView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+        
+        cell?.addSubview(image)
+        
         switch (indexPath.row) {
-            case 0: text = "My Queue"
-                break
-            case 1: text = "Playlists"
-                break
-            case 2: text = "Peers"
-                break
-            case 3: text = "Settings"
-                break
-            case 4: text = "Logout"
-                break
-            default: text = ""
-                break
+        case 0: text = "Previous"
+        
+            break
+        case 1: text = "Play"
+            break
+        case 2: text = "Next"
+            break
+        case 3: text = "Shuffle"
+            image.image = UIImage(named: "shuffle.png")
+            break
+        case 4: text = "Repeat"
+            image.image = UIImage(named: "repeat.png")
+            break
+        case 5: text = "Save"
+            break
+        case 6: text = "Clear"
+            break
+        default: text = ""
+            break
         }
         
         cell!.textLabel?.text = text
@@ -85,10 +96,6 @@ class MyMenuTableViewController: UITableViewController {
         
         print("did select row: \(indexPath.row)")
         
-        if (indexPath.row == selectedMenuItem) {
-            return
-        }
-        
         selectedMenuItem = indexPath.row
         
         //Present new view controller
@@ -96,42 +103,53 @@ class MyMenuTableViewController: UITableViewController {
         var destViewController : UIViewController
         switch (indexPath.row) {
         case 0:
-            destViewController = mainStoryboard.instantiateViewControllerWithIdentifier("tabVC")
+            NSNotificationCenter.defaultCenter().postNotificationName("playPrevious", object: nil)
             break
         case 1:
-            destViewController = mainStoryboard.instantiateViewControllerWithIdentifier("playlists") as! PlaylistTableViewController
+            NSNotificationCenter.defaultCenter().postNotificationName("playPause", object: nil)
+//            destViewController = mainStoryboard.instantiateViewControllerWithIdentifier("playlists") as! PlaylistTableViewController
             break
         case 2:
-            return
-            //destViewController = mainStoryboard.instantiateViewControllerWithIdentifier("peers")
+            NSNotificationCenter.defaultCenter().postNotificationName("playNext", object: nil)
+//            destViewController = mainStoryboard.instantiateViewControllerWithIdentifier("peers")
             break
         case 3:
-            return
-            //destViewController = mainStoryboard.instantiateViewControllerWithIdentifier("settings")
+            NSNotificationCenter.defaultCenter().postNotificationName("shuffle", object: nil)
+//            destViewController = mainStoryboard.instantiateViewControllerWithIdentifier("settings")
             break
         case 4:
-            destViewController = mainStoryboard.instantiateViewControllerWithIdentifier("LoginVC")
-            let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-            appDelegate.window?.rootViewController = destViewController
+            NSNotificationCenter.defaultCenter().postNotificationName("Repeat", object: nil)
+//            destViewController = mainStoryboard.instantiateViewControllerWithIdentifier("LoginVC")
+            
+//            let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+//            appDelegate.window?.rootViewController = destViewController
             break
+        case 5:
+            NSNotificationCenter.defaultCenter().postNotificationName("saveQueue", object: nil)
+            break;
+        case 6:
+            NSNotificationCenter.defaultCenter().postNotificationName("clearQueue", object: nil)
         default:
             
-            destViewController = mainStoryboard.instantiateViewControllerWithIdentifier("tabVC")
+//            destViewController = mainStoryboard.instantiateViewControllerWithIdentifier("tabVC")
             break
         }
-        sideMenuController()?.setContentViewController(destViewController)
-        sideMenuController()?.sideMenu?.hideSideMenu()
+        //sideMenuController()?.setContentViewController(destViewController)
+        self.tableView.deselectRowAtIndexPath(indexPath, animated: false)
+        sideMenuController()?.rightMenu?.hideSideMenu()
+        
     }
     
-
+    
     /*
     // MARK: - Navigation
-
+    
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue!, sender: AnyObject!) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
     }
     */
-
+    
 }
+

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Foundation
 import AVFoundation
 import CoreData
 import PKHUD
@@ -14,6 +15,7 @@ import PKHUD
 class Track {
     var uri = NSURL()
     var position = Int()
+    var upVotes = Int()
 }
 
 class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate {
@@ -42,16 +44,22 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
     var selectedIndex: NSIndexPath?
     var position: NSTimeInterval?
     var next = 0
+    var sortedCount = 1
     var uris: [Track] = []
     var savedURIs = [NSManagedObject]()
     var currentPlaybackPosition: NSTimeInterval?
+    var host = false
+    var fuzer = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.trackTable.delegate = self
         self.trackTable.dataSource = self
+        self.trackTable.alpha = 0.0
+        self.trackTable.remembersLastFocusedIndexPath = true
         
+        loadTableTimer = NSTimer.scheduledTimerWithTimeInterval(0.0, target: self, selector: "showTable", userInfo: nil, repeats: false)
         let longPress = UILongPressGestureRecognizer(target: self, action: "longPressGestureRecognized:")
         longPress.delegate = self
         longPress.minimumPressDuration = 1.0
@@ -67,7 +75,12 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "load:", name: "loadPlaylist", object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "playPause", name: "playPause", object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "playNext", name: "playNext", object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self , selector: "playPrevious", name: "playPrevious", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "playPrevious", name: "playPrevious", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "reset", name: "reset", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "clearQueue", name: "clearQueue", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "isHosting", name: "isHosting", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "isFuzing", name: "isFuzing", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "receivedUpVote:", name: "receivedUpVote", object: nil)
         
         // Do any additional setup after loading the view
         
@@ -102,18 +115,25 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         
     }
     
-    deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+    var loadTableTimer = NSTimer()
+    override func viewWillAppear(animated: Bool) {
+        
+        PKHUD.sharedHUD.contentView = PKHUDSystemActivityIndicatorView()
+        PKHUD.sharedHUD.show()
+        loadRecent()
     }
     
+    func showTable(){
+        UIView.animateWithDuration(1.0, animations: ({
+            self.trackTable.alpha = 1.0
+        }))
+        self.trackTable.hidden = false
+        PKHUD.sharedHUD.hide(afterDelay: 1.0)
+    }
     
-    override func viewWillAppear(animated: Bool) {
-        loadRecent()
-        let indexPath = NSUserDefaults.standardUserDefaults().objectForKey("indexPathRow") as? NSNumber
-//        if (indexPath != nil){
-//        self.tableView(trackTable, didSelectRowAtIndexPath: NSIndexPath(forRow: indexPath as! Int, inSection: 0))
-//        }
-        self.uris.sortInPlace({$1.position > $0.position})
+    override func viewDidDisappear(animated: Bool) {
+        self.trackTable.alpha = 0.0
+        saveRecent()
     }
     
     func load(notification: NSNotification){
@@ -171,6 +191,7 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         
         //3
         do {
+            
             print("fetching...")
             let results =
             try managedContext.executeFetchRequest(fetchRequest)
@@ -189,9 +210,6 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
 
     func loadTracks(session: SPTSession!){
     print("loading tracks...")
-    
-    PKHUD.sharedHUD.contentView = PKHUDProgressView()
-    PKHUD.sharedHUD.show()
         
     for trackURI in savedURIs {
         
@@ -205,24 +223,33 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
             let track = trackObj as! SPTTrack
             let add = Track ()
             add.uri = (track.uri)
-            add.position = trackURI.valueForKey("position") as! Int
+            if (trackURI.valueForKey("position") != nil){
+                add.position = trackURI.valueForKey("position") as! Int
+            } else {
+                add.position = self.uris.count
+            }
+            add.upVotes = trackURI.valueForKey("upvotes") as! Int
+                
+            
             self.uris.append(add)
-            self.uris.sortInPlace({ $1.position > $0.position })
-            self.trackTable.reloadData()
+            dispatch_async(dispatch_get_main_queue()) {
+                self.uris.sortInPlace({ $1.position > $0.position })
+            }
+            
+            if (self.uris.count == self.savedURIs.count){
+            dispatch_async(dispatch_get_main_queue()) {
+               // self.trackTable.alpha = 1.0
+                self.trackTable.reloadData()
+                //self.trackTable.reloadSections(NSIndexSet(index: 0), withRowAnimation: UITableViewRowAnimation.Fade)
+                
+            }
+            }
         })
-    }
         
+    }
+        self.trackTable.hidden = false
         self.player?.queueURIs(self.uris, clearQueue: true, callback: nil)
-        PKHUD.sharedHUD.hide(afterDelay: 0.50)
-    }
-    
-    func organizePlaylist(track: SPTTrack){
-
-    }
-    
-    @IBAction func clearQueue(sender: AnyObject) {
-        self.uris.removeAll()
-        self.trackTable.reloadData()
+        showTable()
     }
     
     func playUsingSession(session: SPTSession!, trackIndex: Int){
@@ -242,6 +269,7 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         for track in uris {
             queue.append(track.uri)
         }
+        
         self.player?.queueURIs(queue, clearQueue: true, callback: nil)
         self.player?.playURIs(queue, fromIndex: Int32(trackIndex), callback: nil)
         queue.removeAll(keepCapacity: false)
@@ -261,7 +289,7 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         if (indexPath.row < self.uris.count){
            
             let trackURI = self.uris[indexPath.row].uri
-                
+            
             SPTRequest.requestItemAtURI(trackURI, withSession: session, callback: {(error: NSError!, trackObj: AnyObject?) -> Void in
                 if (error != nil){
                     print("track lookup got error: \(error)")
@@ -282,48 +310,45 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
             })
         }
         
+        if (fuzer){
+            cell.upVote.alpha = 0.3
+            cell.upVote.enabled = true
+            cell.upVoteLabel.hidden = true
+        } else if (host){
+            cell.upVote.alpha = 0.0
+            cell.upVote.enabled = false
+            cell.upVoteLabel.hidden = false
+            if (indexPath.row < self.uris.count){
+                let upvotes = self.uris[indexPath.row].upVotes
+                cell.upVoteLabel.text = "\(upvotes) upvotes"
+            }
+        } else {
+            cell.upVote.alpha = 0.0
+            cell.upVote.enabled = false
+            cell.upVoteLabel.hidden = true
+        }
+        
         return cell
         
     }
     
-    var timer:  NSTimer!
-    
-    func updateProgress(){
-        
-        if ((player?.isPlaying) == true){
-        let cell: TrackTableViewCell! = timer.userInfo!["cell"] as! TrackTableViewCell
-        let currentProgress = self.player?.currentPlaybackPosition
-        let duration = self.player?.currentTrackDuration
-        let min = floor(currentProgress!);
-        let current = min/duration!
-        if (ceil(currentProgress!) > (duration! - 1.0)){
-            self.trackTable.deselectRowAtIndexPath(selectedIndex!, animated: true)
-            self.trackTable.selectRowAtIndexPath(NSIndexPath(forRow: selectedIndex!.row + 1, inSection: (selectedIndex?.section)!), animated: true, scrollPosition: .None)
-            self.tableView(trackTable, didSelectRowAtIndexPath: NSIndexPath(forRow: selectedIndex!.row + 1, inSection: (selectedIndex?.section)!))
-        }
-            cell.progress.setProgress(Float(current), animated: true)
-        } else {
-            timer.invalidate()
-        }
-    }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
         let cell = tableView.cellForRowAtIndexPath(indexPath) as! TrackTableViewCell
         
+        if (!fuzer){
+    
+        if (selected != nil){
         for (var i = 0; i < self.uris.count; i++){
             let indexPath = NSIndexPath(forRow: i, inSection: 0)
+            if self.trackTable.cellForRowAtIndexPath(indexPath) != nil {
+            let clear = self.trackTable.cellForRowAtIndexPath(indexPath) as! TrackTableViewCell
             UIView.animateWithDuration(0.5, animations: {(
-                self.trackTable.cellForRowAtIndexPath(indexPath)?.backgroundColor = UIColor.clearColor()
+                clear.backgroundColor = UIColor.clearColor()
             )}, completion: nil)
-            let deselect = self.trackTable.cellForRowAtIndexPath((indexPath)) as! TrackTableViewCell
-            deselect.progress.hidden = true
+            }
         }
-        
-        cell.progress.hidden = false
-    
-        if timer != nil {
-            timer.invalidate()
         }
         
         if ((selected == nil || cell != selected)){
@@ -370,9 +395,6 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
             }
             selected = cell
             selectedIndex = indexPath
-            NSUserDefaults.standardUserDefaults().setObject(indexPath.row as NSNumber, forKey: "indexPathRow")
-            NSUserDefaults.standardUserDefaults().synchronize()
-            timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: Selector("updateProgress"), userInfo: ["cell": cell], repeats: true)
             NSNotificationCenter.defaultCenter().postNotificationName("makePause", object: nil)
         } else {
             player?.stop({(error: NSError!) -> Void in
@@ -380,18 +402,41 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
                     print("Cannot stop playback: \(error)")
                 }
             })
+            NSUserDefaults.standardUserDefaults().setObject(nil, forKey: "indexPathRow")
+            NSUserDefaults.standardUserDefaults().synchronize()
             NSNotificationCenter.defaultCenter().postNotificationName("makePlay", object: nil)
-            timer.invalidate()
             selected = nil
             cell.backgroundColor = UIColor.clearColor()
         }
  
         self.trackTable.deselectRowAtIndexPath(indexPath, animated: false)
+        } else {
+            
+            //upvote and downvote songs
+            let trackIdentifier = self.uris[indexPath.row].uri.description 
+            
+            if (cell.upVote.alpha != 1.0){
+            cell.upVote.alpha = 1.0
+            self.uris[indexPath.row].upVotes += 1
+                print("upvoted , current vote count: \(self.uris[indexPath.row].upVotes)")
+                NSNotificationCenter.defaultCenter().postNotificationName("sendUpVote", object: trackIdentifier)
+                //UPVOTE A SONG
+            } else {
+                //DOWNVOTE A SONG
+                cell.upVote.alpha = 0.3
+                self.uris[indexPath.row].upVotes += 1
+                NSNotificationCenter.defaultCenter().postNotificationName("sendDownVote", object: nil)
+            }
+        }
         
     }
     
     func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        return true
+        if (!fuzer){
+            return true
+        } else {
+            return false
+        }
     }
     
     override func canBecomeFirstResponder() -> Bool {
@@ -399,28 +444,30 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
     }
     
     override func motionEnded(motion: UIEventSubtype, withEvent event: UIEvent?) {
+        if (!fuzer){
         if motion == .MotionShake {
             let alertController = UIAlertController(title: "Clear queue?", message: "Would you like to clear the current queue?", preferredStyle: .Alert)
             let clearAction = UIAlertAction(title: "Clear", style: .Default, handler: {(action: UIAlertAction!) -> Void in
-                self.uris.removeAll()
-                self.removePreviousRecentPlaylists()
-                self.trackTable.reloadData()
+            self.clearQueue()
         })
             let cancelAction = UIAlertAction(title:"Cancel", style: .Default, handler:nil)
-            
             alertController.addAction(cancelAction)
             alertController.addAction(clearAction)
             
             self.presentViewController(alertController, animated: true, completion: nil)
+        }
         }
     }
     
     
     //allows user to swipe to delete a specifc cell from queue and updates accordingly
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        if (host || (!host && !fuzer)){
         if (editingStyle == UITableViewCellEditingStyle.Delete) {
             self.uris.removeAtIndex(indexPath.row)
+            saveRecent()
             self.trackTable.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+        }
         }
         
     }
@@ -433,18 +480,25 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         let newTrack = userInfo["track"] as! SPTTrack
         let trackURI = newTrack.uri as NSURL
         
-        
             //add to end of queue
             let add = Track()
             add.uri = trackURI
             add.position = self.uris.count
+            add.upVotes = 0
+        
+        let index = self.uris.indexOf(({$0.uri == add.uri}))
+        
+        if index == nil {
             self.uris.append(add)
-
+        }
+        
+       
+        dispatch_async(dispatch_get_main_queue()) {
+            self.uris.sortInPlace({ $1.position > $0.position })
+            self.trackTable.reloadSections(NSIndexSet(index: 0), withRowAnimation: UITableViewRowAnimation.Fade)
+        }
         
         saveRecent()
-        self.uris.sortInPlace({  $1.position > $0.position })
-        self.trackTable.reloadData()
-        
     }
     
     func addOthers(notification: NSNotification){
@@ -452,30 +506,29 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
             AnyObject!>
         
         let newTrackString = userInfo["track"] as! String
-        var trackURI: NSURL?
-        var newTrack: SPTPartialTrack?
+       let trackURI = NSURL(string: newTrackString)
         
-            trackURI = NSURL(string: newTrackString)
-            
-        SPTRequest.requestItemAtURI(trackURI, withSession: self.session, callback: {(error: NSError?, trackObj: AnyObject?)-> Void in
-            if (error != nil){
-                print("error: \(error)")
-                return
-            }
-            newTrack = trackObj as! SPTPartialTrack
-        })
-
-        
+        if trackURI  != nil {
+       
         let add = Track()
         add.uri = trackURI!
         add.position = self.uris.count
-        self.uris.append(add)
+        add.upVotes = 0
+            
+        print(add.position)
+
+        let index = self.uris.indexOf(({$0.uri == add.uri}))
         
+        if index == nil  {
+            self.uris.append(add)
+            }
+        }
+        
+        dispatch_async(dispatch_get_main_queue()) {
+            self.uris.sortInPlace({ $1.position > $0.position })
+            self.trackTable.reloadSections(NSIndexSet(index: 0), withRowAnimation: UITableViewRowAnimation.Fade)
+        }
         saveRecent()
-        
-        
-        self.uris.sortInPlace({  $1.position > $0.position })
-        self.trackTable.reloadData()
     }
     
     func saveRecent(){
@@ -483,26 +536,25 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         let managedContext = appDelegate.managedObjectContext
         
         let fetchRequest = NSFetchRequest(entityName: "Recent")
-        if #available(iOS 9.0, *) {
-            let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
             do {
                 
                 try managedContext.executeRequest(deleteRequest)
-                //try myPersistentStoreCoordinator.executeRequest(deleteRequest, withContext: myContext)
                 
-                // managedContext.executeRequest(deleteRequest, withContext: managedContext)
             } catch let error as NSError {
                 // TODO: handle the error
-                print("ERROR ERROR ERROR ON DELETE")
+                print("ERROR ERROR ERROR ON DELETE: \(error)")
             }
-        }
         
         //2
         let entity =  NSEntityDescription.entityForName("Recent", inManagedObjectContext:managedContext)
         for trackURI in self.uris {
+            let indexOf = self.uris.indexOf(({$0.uri == trackURI.uri.description}))
+            print(indexOf)
             let song = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedContext)
             song.setValue(trackURI.uri.description, forKey: "uri")
             song.setValue(trackURI.position, forKey: "position")
+            song.setValue(trackURI.upVotes, forKey: "upvotes")
         }
         
         
@@ -511,7 +563,6 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         } catch let error as NSError  {
             print("Could not save \(error), \(error.userInfo)")
         }
-
     }
 
     //save current queue as a playlist in CoreData
@@ -606,13 +657,19 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         return true
     }
     
+    func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
+        return UITableViewCellEditingStyle.None
+    }
+    
    func tableView(tableView: UITableView, moveRowAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
             // remove the dragged row's model
             let other = self.uris.removeAtIndex(sourceIndexPath.row)
-            
             // insert it into the new position
             self.uris.insert(other, atIndex: destinationIndexPath.row)
+            saveRecent()
+            player?.queueURIs(self.uris, clearQueue: true, callback: nil)
     }
+    
     
     
     func removePreviousRecentPlaylists(){
@@ -622,24 +679,65 @@ class FirstViewController: UIViewController, SPTAudioStreamingPlaybackDelegate, 
         
         //2
         let fetchRequest = NSFetchRequest(entityName: "Recent")
-        if #available(iOS 9.0, *) {
-            let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+        
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
             do {
                 
                 try managedContext.executeRequest(deleteRequest)
-                //try myPersistentStoreCoordinator.executeRequest(deleteRequest, withContext: myContext)
-                
-                // managedContext.executeRequest(deleteRequest, withContext: managedContext)
+
             } catch let error as NSError {
                 // TODO: handle the error
+                print("error deleting: \(error)")
             }
-            
-        } else {
-            // Fallback on earlier versions
-        }
         
         
     }
     
+    func receivedUpVote(notification: NSNotification!){
+        var trackIdentifier = notification.object as! String
+        trackIdentifier = trackIdentifier.stringByReplacingOccurrencesOfString(" ", withString: "")
+        for track in uris {
+            if (track.uri.description == trackIdentifier){
+                track.upVotes = track.upVotes + 1
+                print("upvote receieved and displayed")
+                break;
+            }
+        }
+        let indexSet = NSIndexSet(index: 0)
+        dispatch_async(dispatch_get_main_queue()) {
+            self.uris.sortInPlace({ $1.position > $0.position })
+            self.trackTable.reloadSections(NSIndexSet(index: 0), withRowAnimation: UITableViewRowAnimation.Fade)
+        }
+        //self.trackTable.reloadData()
+        saveRecent()
+        self.player?.queueURIs(self.uris, clearQueue: true, callback: nil)
+    }
+    
+    func clearQueue(){
+        self.uris.removeAll()
+        self.trackTable.reloadData()
+        removePreviousRecentPlaylists()
+        if (player != nil){
+            player?.stop(nil)
+        }
+    }
+    
+    func isHosting(){
+        host = true
+        fuzer = false
+        self.trackTable.reloadData()
+    }
+    
+    func isFuzing(){
+        fuzer = true
+        host = false
+        clearQueue()
+        self.trackTable.reloadData()
+    }
+    
+    func reset(){
+        host = false
+        fuzer = false
+    }
 }
 

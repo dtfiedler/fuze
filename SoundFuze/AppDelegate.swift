@@ -9,11 +9,14 @@
 import UIKit
 import AVFoundation
 import CoreData
+import Reachability
 
 @UIApplicationMain
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+    private var reach: Reachability?
+    
     var window: UIWindow?
     
     let session: SPTSession! = nil
@@ -29,18 +32,54 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
-        var navigationBarAppearace = UINavigationBar.appearance()
+        let navigationBarAppearace = UINavigationBar.appearance()
         let tabBarAppearence = UITabBar.appearance()
         
         navigationBarAppearace.barTintColor = UIColor(red: 1/255, green: 54/255, blue: 130/255, alpha: 1.0)
-        navigationBarAppearace.tintColor = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 1)
-        navigationBarAppearace.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
+        navigationBarAppearace.tintColor = UIColor.whiteColor()
+        //navigationBarAppearace.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.whiteColor()]
         tabBarAppearence.barTintColor = UIColor(red: 1/255, green: 54/255, blue: 130/255, alpha: 1.0)
         tabBarAppearence.tintColor = UIColor(red: 255/255, green: 255/255, blue: 255/255, alpha: 1)
+        //UIViewController.preferredStatusBarStyle(<#T##UIViewController#>)
         UIApplication.sharedApplication().setStatusBarStyle(UIStatusBarStyle.LightContent, animated: true)
+        if let font = UIFont(name: "Quicksand", size: 18) {
+            UINavigationBar.appearance().titleTextAttributes = [NSFontAttributeName: font]
+            //UINavigationBar.appearance().tintColor = UIColor.whiteColor()
+            //UILabel.appearance().font = UIFont(name: "Quicksand", size: 14)
+        }
         
-        return true
-    }
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector:"checkForReachability:", name: kReachabilityChangedNotification, object: nil);
+        
+            // Allocate a reachability object
+            self.reach = Reachability.reachabilityForInternetConnection()
+            
+            // Tell the reachability that we DON'T want to be reachable on 3G/EDGE/CDMA
+            self.reach!.reachableOnWWAN = false
+            
+            // Here we set up a NSNotification observer. The Reachability that caused the notification
+            // is passed in the object parameter
+//            NSNotificationCenter.defaultCenter().addObserver(self,
+//                selector: "reachabilityChanged:",
+//                name: kReachabilityChangedNotification,
+//                object: nil)
+//            
+//            self.reach!.startNotifier()
+        
+            return true
+        }
+
+        //Reachbality Notification Response
+        
+//    func reachabilityChanged(notification: NSNotification) {
+//            if self.reach!.isReachableViaWiFi() || self.reach!.isReachableViaWWAN() {
+//                print("Service avalaible!!!")
+//            } else {
+//                print("No service avalaible!!!")
+//                
+////                AppHelper.showALertWithTag(0, title: constants.AppName.rawValue, message: "Please Check Your Internet Connection!", delegate: self, cancelButtonTitle: "OK", otherButtonTitle: nil)
+////            }
+//    }
 
     func applicationWillResignActive(application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -90,7 +129,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         return false
     }
-    
     
     // MARK: - Core Data stack
     

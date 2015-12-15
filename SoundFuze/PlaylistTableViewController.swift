@@ -16,6 +16,9 @@ class PlaylistTableViewController: UITableViewController, ENSideMenuDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
+        let font = UIFont(name: "Quicksand", size: 18)
+        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor(), NSFontAttributeName: font!]
         self.sideMenuController()?.sideMenu?.delegate = self
         self.navigationController?.navigationBarHidden = false
         let menuButton: UIBarButtonItem = UIBarButtonItem(image: UIImage(named: "dot"), style: UIBarButtonItemStyle.Bordered, target: self, action: "toggleSideMenu")
@@ -68,10 +71,12 @@ class PlaylistTableViewController: UITableViewController, ENSideMenuDelegate {
 
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+       
         let cell = tableView.dequeueReusableCellWithIdentifier("playlist", forIndexPath: indexPath)
         if indexPath.row < allPlaylists.count {
             cell.textLabel?.text = allPlaylists[indexPath.row]
         }
+        cell.textLabel?.font = UIFont(name: "QuicksandBook-Regular", size: 12.0)
         return cell
     }
     

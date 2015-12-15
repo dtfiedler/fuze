@@ -18,7 +18,10 @@ import UIKit
 
 @objc public protocol ENSideMenuProtocol {
     var sideMenu : ENSideMenu? { get }
+    var rightMenu : ENSideMenu? { get }
+    
     func setContentViewController(contentViewController: UIViewController)
+
 }
 
 public enum ENSideMenuAnimation : Int {
@@ -43,11 +46,19 @@ public extension UIViewController {
     public func toggleSideMenuView () {
         sideMenuController()?.sideMenu?.toggleMenu()
     }
+    
+    public func toggleRightMenuView () {
+        sideMenuController()?.rightMenu?.toggleMenu()
+    }
     /**
     Hides the side menu view.
     */
     public func hideSideMenuView () {
         sideMenuController()?.sideMenu?.hideSideMenu()
+    }
+    
+    public func hideRightMenuView () {
+        sideMenuController()?.rightMenu?.hideSideMenu()
     }
     /**
     Shows the side menu view.
@@ -57,6 +68,10 @@ public extension UIViewController {
         sideMenuController()?.sideMenu?.showSideMenu()
     }
     
+    public func showRightMenuView () {
+        
+        sideMenuController()?.rightMenu?.showSideMenu()
+    }
     /**
     Returns a Boolean value indicating whether the side menu is showed.
     
@@ -67,6 +82,11 @@ public extension UIViewController {
         return sieMenuOpen!
     }
     
+    public func isRightMenuOpen () -> Bool {
+        let rightMenuOpen = self.sideMenuController()?.rightMenu?.isMenuOpen
+        return rightMenuOpen!
+    }
+    
     /**
      * You must call this method from viewDidLayoutSubviews in your content view controlers so it fixes size and position of the side menu when the screen
      * rotates.
@@ -75,6 +95,7 @@ public extension UIViewController {
     func fixSideMenuSize() {
         if let navController = self.navigationController as? ENSideMenuNavigationController {
             navController.sideMenu?.updateFrame()
+            navController.rightMenu?.updateFrame()
         }
     }
     /**
@@ -125,7 +146,7 @@ public class ENSideMenu : NSObject, UIGestureRecognizerDelegate {
     ///  A Boolean value indicating whether the bouncing effect is enabled. The default value is TRUE.
     public var bouncingEnabled :Bool = true
     /// The duration of the slide animation. Used only when `bouncingEnabled` is FALSE.
-    public var animationDuration = 0.4
+    public var animationDuration = 0.2
     private let sideMenuContainerView =  UIView()
     private(set) var menuViewController : UIViewController!
     private var animator : UIDynamicAnimator!
@@ -215,7 +236,20 @@ public class ENSideMenu : NSObject, UIGestureRecognizerDelegate {
             menuWidth,
             height
         )
+        
         sideMenuContainerView.frame = menuFrame
+        
+//        let rightFrame = CGRectMake(
+//            (menuPosition == .Right) ?
+//                isMenuOpen ? 0 :  menuWidth+1.0 :
+//                isMenuOpen ? width + menuWidth : width-1.0,
+//            sourceView.frame.origin.y,
+//            menuWidth,
+//            height
+//        )
+//        
+//        sideMenuContainerView.frame = rightFrame
+        
     }
     
     private func adjustFrameDimensions( width: CGFloat, height: CGFloat ) -> (CGFloat,CGFloat) {
